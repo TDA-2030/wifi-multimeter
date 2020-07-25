@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Multimeter</title>
+    <style type="text/css">
+        /* body {
+            background-color: rgb(14, 13, 13);
+        } */
+        #h2 {
+            text-align:center;
+        }
+        .menu_button {
+            text-align:center;
+            font-size: 20px;
+            height: 50px;
+            width: 150px;
+        }
+        #ADCdata {
+            /* background-color: rgb(74, 89, 153); */
+            text-align: center;
+            color: rgb(104, 129, 70);
+            font-family: Graduate;
+            font-size: 120px;
+            margin-left: 100px;
+        }
+        #indicator {
+            /* font-family: Graduate; */
+            font-size: 20px;
+            margin-left: 100px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<h1 id="h2">ESP32 WiFi Multimeter</h1>
+
+
+<label id="ADCdata" >----</label>
+<label id="indicator" >电压</label>
+<br/>
+<table class="fixed" border="0">
+    <tr>
+        <col width="200px" /><col width="200px" /><col width="200px" />
+        <td><button class="menu_button" id="switchADC" onclick="switcw_adc('switchADC')">打开</button></td>
+        <td><button class="menu_button" id="btn_omu" onclick="switch_mode('btn_omu', 'omu')">Ω</button></td>
+        <td><button class="menu_button" id="btn_vol" onclick="switch_mode('btn_vol', 'vol')">V</button></td>
+        <td><button class="menu_button" id="btn_cur" onclick="switch_mode('btn_cur', 'cur')">A</button></td>
+    </tr>
+    <tr>
+        <td><label id="status">ready</label></td>
+    </tr>
+   
+</table>
+
+<script>
+
+var timer_adc = 0;
+var no_resp_num = 0;
+
+function get_adc(btn_id) {
+    var httpRequest = new XMLHttpRequest();
+
+    httpRequest.open('GET', 'getadc', true);
+    httpRequest.timeout = 450; // 超时时间，单位是毫秒
+    
+    httpRequest.onreadystatechange = function () {
+        // document.getElementById('ADCdata').innerHTML = httpRequest.responseText;
+        if (httpRequest.readyState == 4) {
+            if(httpRequest.status == 200) {
+                var data = httpRequest.responseText;
+                document.getElementById('ADCdata').innerHTML=data;
+                no_resp_num = 0;
+            } else if (httpRequest.status == 0) {
+                no_resp_num++;
+                if(no_resp_num > 5){
+                    document.getElementById(btn_id).innerText = "打开";
+                    document.getElementById(btn_id).style.backgroundColor='#fff';
+                    timer_adc = window.clearInterval(timer_adc);
+                    document.getElementById('status').innerHTML="connect error";
+                }
+                
+            } else {
+                document.getElementById('status').innerHTML=httpRequest.status + " Error!\n" + httpRequest.responseText;
+                
+            }
+        }
+    };
+
+    httpRequest.send();
+}
+
+
+function switcw_adc(btn_id) {
+    if(!timer_adc){
+        document.getElementById(btn_id).innerText = "关闭";
+        document.getElementById(btn_id).style.backgroundColor='#0ff';
+        timer_adc=self.setInterval('get_adc("'+btn_id+'")',500);
+        document.getElementById('status').innerHTML="ready";
+    }else{
+        document.getElementById(btn_id).innerText = "打开";
+        document.getElementById(btn_id).style.backgroundColor='#fff';
+        timer_adc = window.clearInterval(timer_adc);
+    }
+}
+
+
+function switch_mode(id, mode) {
+
+    var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+    httpRequest.open('GET', 'switch_mode', true); //第二步：打开连接
+    httpRequest.setRequestHeader('measure-mode', mode);
+    httpRequest.send();//发送请求 将情头体写在send中
+
+    httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+    if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+            // document.getElementById(id).style.backgroundColor='#0ff';
+        document.getElementById('indicator').innerHTML=mode;
+    }
+    };
+}
+
+
+</script>

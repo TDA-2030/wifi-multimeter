@@ -78,10 +78,7 @@ static void initialise_mdns(void)
                                      sizeof(serviceTxtData) / sizeof(serviceTxtData[0])));
 }
 
-/* Declare the function which starts the file server.
- * Implementation of this function is to be found in
- * file_server.c */
-esp_err_t start_file_server(const char *base_path);
+esp_err_t start_web_server(const char *base_path);
 
 void app_main()
 {
@@ -113,5 +110,5 @@ void app_main()
     sensor_battery_init(ADC_CHANNEL_6);
 
     /* Start the file server */
-    ESP_ERROR_CHECK(start_file_server("/spiffs"));
+    start_web_server();
 }

@@ -61,10 +61,9 @@ function get_adc(btn_id) {
     var httpRequest = new XMLHttpRequest();
 
     httpRequest.open('GET', 'getadc', true);
-    httpRequest.timeout = 450; // 超时时间，单位是毫秒
+    httpRequest.timeout = 600; // 超时时间，单位是毫秒
     
     httpRequest.onreadystatechange = function () {
-        // document.getElementById('ADCdata').innerHTML = httpRequest.responseText;
         if (httpRequest.readyState == 4) {
             if(httpRequest.status == 200) {
                 var data = httpRequest.responseText;
@@ -72,8 +71,9 @@ function get_adc(btn_id) {
                 no_resp_num = 0;
             } else if (httpRequest.status == 0) {
                 no_resp_num++;
+                console.log("no_resp_num=" + no_resp_num);
                 if(no_resp_num > 5){
-                    document.getElementById(btn_id).innerText = "打开";
+                    document.getElementById(btn_id).innerHTML = "打开";
                     document.getElementById(btn_id).style.backgroundColor='#fff';
                     timer_adc = window.clearInterval(timer_adc);
                     document.getElementById('status').innerHTML="connect error";
@@ -92,12 +92,12 @@ function get_adc(btn_id) {
 
 function switcw_adc(btn_id) {
     if(!timer_adc){
-        document.getElementById(btn_id).innerText = "关闭";
+        document.getElementById(btn_id).innerHTML = "关闭";
         document.getElementById(btn_id).style.backgroundColor='#0ff';
         timer_adc=self.setInterval('get_adc("'+btn_id+'")',500);
         document.getElementById('status').innerHTML="ready";
     }else{
-        document.getElementById(btn_id).innerText = "打开";
+        document.getElementById(btn_id).innerHTML = "打开";
         document.getElementById(btn_id).style.backgroundColor='#fff';
         timer_adc = window.clearInterval(timer_adc);
     }

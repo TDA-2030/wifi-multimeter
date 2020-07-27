@@ -37,7 +37,29 @@ typedef struct {
     audios_data_t *next;
 }audios_data_t;
 
-static audios_data_t *audios_head = NULL;
+static audios_data_t g_audios_head = {0};
+
+
+/* Push an element into tail of the list */
+static audios_data_t* List_push(audios_data_t* list, uint8_t *val, size_t len)
+{
+    audios_data_t *new_elem = malloc(sizeof(audios_data_t));
+    SPEECH_CHECK(NULL != new_elem, "new list element malloc failed", NULL);
+    new_elem->data = val;
+    new_elem->len = len;
+    list->next = new_elem;
+    new_elem->next = NULL;
+    return new_elem;
+}
+
+/* Length of list */
+int List_length(audios_data_t* list)
+{
+    int n;
+    for (n = 0; list; list = list->next) n++;
+    return n;
+}
+
 
 static void pwm_audio_task(void *arg)
 {
@@ -142,16 +164,20 @@ static esp_err_t get_audio_data(const char *filepath, uint8_t **out_data, size_t
     return ESP_OK;
 }
 
-static esp_err_t add_num(audios_data_t **audios, uint8_t num)
+static esp_err_t add_num(audios_data_t **tail, uint8_t num)
 {
     SPEECH_CHECK(num <= 9, "number too large", ESP_FAIL);
-    *audios = malloc(sizeof(audios_data_t));
-    memset(*audios, 0, sizeof(audios_data_t));
-    SPEECH_CHECK(NULL != *audios, "audios_data malloc failed", ESP_FAIL);
     
+    audios_data_t *p = malloc(sizeof(audios_data_t));
+    SPEECH_CHECK(NULL != p, "audios_data malloc failed", ESP_FAIL);
+    memset(p, 0, sizeof(audios_data_t));
+
     char path[32];
     sprintf(path, "%s/%d.wav", BASE_PATH, num);
-    get_audio_data(path, &(*audios->data) ,&(*audios->len));
+    get_audio_data(path, &(p->data) ,&(p->len));
+
+    tail->next = p;
+    tail = tail->next;
 }
 
 // static esp_err_t add_char(sound, char){

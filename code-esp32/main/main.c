@@ -16,6 +16,8 @@
 #include "esp_spiffs.h"
 #include "nvs_flash.h"
 #include "tcpip_adapter.h"
+#include "web_server.h"
+#include "speech.h"
 #include "blufi.h"
 #include "mdns.h"
 #include "sensor.h"
@@ -78,64 +80,7 @@ static void initialise_mdns(void)
                                      sizeof(serviceTxtData) / sizeof(serviceTxtData[0])));
 }
 
-static void pwm_audio_task(void *arg)
-{
-    wave_array     = wave_get();
-    wave_size      = wave_get_size();
-    wave_framerate = wave_get_framerate();
-    wave_bits      = wave_get_bits();
-    wave_ch        = wave_get_ch();
 
-    pwm_audio_config_t pac;
-    pac.duty_resolution    = LEDC_TIMER_10_BIT;
-    pac.gpio_num_left      = 25;
-    pac.ledc_channel_left  = LEDC_CHANNEL_0;
-    pac.gpio_num_right     = -1;
-    pac.ledc_channel_right = LEDC_CHANNEL_1;
-    pac.ledc_timer_sel     = LEDC_TIMER_0;
-    pac.tg_num             = TIMER_GROUP_0;
-    pac.timer_num          = TIMER_0;
-    pac.ringbuf_len        = 1024 * 8;
-    pwm_audio_init(&pac);
-
-    uint32_t index = 0;
-    size_t cnt;
-    uint32_t block_w = 2048;
-    ESP_LOGI(TAG, "play init");
-    pwm_audio_set_param(wave_framerate, wave_bits, wave_ch);
-    pwm_audio_start();
-    pwm_audio_set_volume(0);
-
-    while (1) {
-        if (index < wave_size) {
-            if ((wave_size - index) < block_w) {
-                block_w = wave_size - index;
-            }
-
-            pwm_audio_write((uint8_t *)wave_array + index, block_w, &cnt, 5000 / portTICK_PERIOD_MS);
-            ESP_LOGI(TAG, "write [%d] [%d]", block_w, cnt);
-            index += cnt;
-        } else {
-
-            ESP_LOGW(TAG, "play completed");
-#ifdef REPEAT_PLAY
-            index = 0;
-            block_w = 2048;
-            pwm_audio_stop();
-            vTaskDelay(2500 / portTICK_PERIOD_MS);
-            pwm_audio_start();
-            ESP_LOGW(TAG, "play start");
-#else
-            pwm_audio_stop();
-            vTaskDelay(portMAX_DELAY);
-#endif
-        }
-
-        vTaskDelay(6 / portTICK_PERIOD_MS);
-    }
-}
-
-esp_err_t start_web_server(void);
 
 void app_main()
 {
@@ -168,4 +113,13 @@ void app_main()
 
     /* Start the file server */
     start_web_server();
+
+    while (1)
+    {
+        size_t _free = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
+        float free = (float)_free / 1024.0f;
+        ESP_LOGI("main", "heap free=%f KB", free);
+        vTaskDelay(1000/portTICK_PERIOD_MS);
+    }
+    
 }

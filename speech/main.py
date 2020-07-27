@@ -1,5 +1,5 @@
 from pydub import AudioSegment
-from playsound import playsound
+# from playsound import playsound
 import os
 import simpleaudio as sa
 from ffmpeg import audio
@@ -126,16 +126,12 @@ def generate_audio(path, acc=1):
                 audio.a_speed(file_path, acc, path_acc+f)
                 file_path = path_acc + f
 
-            cut_audio(file_path, "voice/%s.wav" % fname, 0, 250)
+            cut_audio(file_path, "voice/%s.wav" % fname, 0, 220)
 
-    # for i in range(1, 10):
-    #     cut_audio("../../audio_file/%d.mp3" % i, "%d.wav" % i, 0, 350)
-    # cut_audio("../../audio_file/qian.mp3", "qian.wav", 0, 350)
-    # audio.a_speed("D:\\1505.mp3", "2", "D:\\1505_2x.mp3")
 
 if __name__ == "__main__":
     # get_audio_info('../../3.mp3')
-    # generate_audio('../../audio_file/', acc=1.5)
+    # generate_audio('audio_file/', acc=1.5)
 
     # synthesis(1000)
     #
@@ -145,7 +141,7 @@ if __name__ == "__main__":
     #
     # synthesis(1230)
     # synthesis(1203)
-    # synthesis(1023)
+    synthesis(1023, 'hao', 'fu')
     #
     synthesis(1.268, 'wei', 'an')
 

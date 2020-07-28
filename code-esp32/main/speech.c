@@ -31,17 +31,37 @@ static const char *TAG = "speech";
 
 #define BASE_PATH "/spiffs"
 #define AUDIO_NUM_MAX 16
+
 typedef struct {
     uint8_t *data;
     size_t len;
     audios_data_t *next;
-}audios_data_t;
+} audios_data_t;
+
+typedef struct {
+    // The "RIFF" chunk descriptor
+    uint8_t ChunkID[4];
+    int32_t ChunkSize;
+    uint8_t Format[4];
+    // The "fmt" sub-chunk
+    uint8_t Subchunk1ID[4];
+    int32_t Subchunk1Size;
+    int16_t AudioFormat;
+    int16_t NumChannels;
+    int32_t SampleRate;
+    int32_t ByteRate;
+    int16_t BlockAlign;
+    int16_t BitsPerSample;
+    // The "data" sub-chunk
+    uint8_t Subchunk2ID[4];
+    int32_t Subchunk2Size;
+} wav_header_t;
 
 static audios_data_t g_audios_head = {0};
 
 
 /* Push an element into tail of the list */
-static audios_data_t* List_push(audios_data_t* list, uint8_t *val, size_t len)
+static audios_data_t *list_push(audios_data_t *list, uint8_t *val, size_t len)
 {
     audios_data_t *new_elem = malloc(sizeof(audios_data_t));
     SPEECH_CHECK(NULL != new_elem, "new list element malloc failed", NULL);
@@ -49,14 +69,19 @@ static audios_data_t* List_push(audios_data_t* list, uint8_t *val, size_t len)
     new_elem->len = len;
     list->next = new_elem;
     new_elem->next = NULL;
+    g_audios_head.len++;  //表头的len字段用来统计表的长度
     return new_elem;
 }
 
 /* Length of list */
-int List_length(audios_data_t* list)
+int List_length(audios_data_t *list)
 {
     int n;
-    for (n = 0; list; list = list->next) n++;
+
+    for (n = 0; list; list = list->next) {
+        n++;
+    }
+
     return n;
 }
 
@@ -143,7 +168,15 @@ static esp_err_t get_audio_data(const char *filepath, uint8_t **out_data, size_t
         return ESP_FAIL;
     }
 
-    size_t chunksize;
+    /**
+     * read head of WAV file
+     */
+    wav_header_t wav_head;
+    int ChunkSize = fread(&wav_head, 1, sizeof(wav_header_t), fd);
+
+    /**
+     * read wave data of WAV file
+     */
     size_t write_num = 0;
 
     do {
@@ -159,73 +192,149 @@ static esp_err_t get_audio_data(const char *filepath, uint8_t **out_data, size_t
 
     fclose(fd);
 
-    *out_length = write_num;
     ESP_LOGI(TAG, "File reading complete, total: %ld bytes", write_num);
     return ESP_OK;
 }
 
 static esp_err_t add_num(audios_data_t **tail, uint8_t num)
 {
+    esp_err_t ret;
     SPEECH_CHECK(num <= 9, "number too large", ESP_FAIL);
-    
-    audios_data_t *p = malloc(sizeof(audios_data_t));
-    SPEECH_CHECK(NULL != p, "audios_data malloc failed", ESP_FAIL);
-    memset(p, 0, sizeof(audios_data_t));
 
     char path[32];
+    uint8_t *data;
+    size_t len;
     sprintf(path, "%s/%d.wav", BASE_PATH, num);
-    get_audio_data(path, &(p->data) ,&(p->len));
+    ret = get_audio_data(path, &data, &len);
+    SPEECH_CHECK(ESP_OK == ret, "get audio failed", ESP_FAIL);
 
-    tail->next = p;
-    tail = tail->next;
+    audios_data_t *p = list_push(*tail, data, len);
+
+    if (NULL != p) {
+        *tail = p;
+    }
+
 }
 
-// static esp_err_t add_char(sound, char){
-//     print("add char %s" % char)
-//     name = 'voice/' + char + '.wav'
-//     sound.append(AudioSegment.from_file(name))
-// }
-// static esp_err_t add_decimal(sound, index){
-//     char = 'ge'
-//     if index == 1:
-//         return
-//     if index == 2:
-//         char = 'shi'
-//     elif index == 3:
-//         char = 'bai'
-//     elif index == 4:
-//         char = 'qian'
-//     add_char(sound, char)
-// }
-// static esp_err_t add_unit(sound, unit){
-//     add_char(sound, unit)
-// }
+static esp_err_t add_char(audios_data_t **tail, char *str)
+{
+    esp_err_t ret;
+    SPEECH_CHECK(strlen(str) < 10, "string too long", ESP_FAIL);
 
-// static esp_err_t add_integral(sound, num){
-//     s = str(num)
-//     s = s[:4]
+    char path[32];
+    uint8_t *data;
+    size_t len;
+    sprintf(path, "%s/%s.wav", BASE_PATH, str);
+    ret = get_audio_data(path, &data, &len);
+    SPEECH_CHECK(ESP_OK == ret, "get audio failed", ESP_FAIL);
 
-//     i = 0
-//     last_zero = -1
-//     while i < len(s):
-//         num = int(s[i])
+    audios_data_t *p = list_push(*tail, data, len);
 
-//         if last_zero == -1 or num != 0:
-//             add_num(sound, num)
-//         if num != 0:
-//             last_zero = -1
-//             add_decimal(sound, len(s) - i)
-//         else:
-//             last_zero = i
+    if (NULL != p) {
+        *tail = p;
+    }
+}
 
-//         # check is all zero
-//         zero_num = 0
-//         for j in range(i + 1, len(s)):
-//             if int(s[j]) == 0:
-//                 zero_num = zero_num + 1
-//         if zero_num == (len(s) - i - 1):
-//             break
-//         i = i + 1
+static esp_err_t add_decimal(audios_data_t **tail, uint8_t index)
+{
+    char *dec = "ge";
+
+    switch (index) {
+        case 2:
+            dec = "shi";
+            break;
+
+        case 3:
+            dec = "bai";
+            break;
+
+        case 4:
+            dec = "qian";
+            break;
+
+        default:
+            break;
+    }
+
+    add_char(tail, dec);
+}
+
+static inline esp_err_t add_unit(audios_data_t **tail, char *str)
+{
+    add_char(tail, str);
+}
+
+static esp_err_t add_integral(audios_data_t **tail, char *number)
+{
+    SPEECH_CHECK(strlen(number) < 5, "number too long", ESP_FAIL);
+
+    char s[16] = {0};
+    strcpy(s, number);
+    ESP_LOGI(TAG, "add integral number: %s", s);
+
+    int8_t i = 0;
+    int8_t last_zero = -1;
+    const uint8_t len_s = strlen(s);
+
+    while (i < len_s) {
+        uint8_t num = s[i] - '0';
+
+        if (last_zero == -1 || num != 0) {
+            add_num(tail, num);
+        }
+
+        if (num != 0) {
+            last_zero = -1;
+            add_decimal(tail, len_s - i);
+        } else {
+            last_zero = i;
+        }
+
+        /**
+         * check is all zero
+         */
+        uint8_t zero_num = 0;
+
+        for (size_t j = i + 1; j < len_s; j++) {
+            if (s[j] == '0') {
+                zero_num++;
+            }
+        }
+
+        if (zero_num == (len_s - i - 1)) {
+            break;
+        }
+
+        i++;
+    }
+}
+
+// static esp_err_t synthesis(float num, char *unit1, char *unit2)
+// {
+//     audios_data_t *audio_list = &g_audios_head;
+//     if (num < 1000){
+//         s = str(num)
+//         s = s[:5]
+//         Integral = s.split('.')[0]
+//         Fractional = s.split('.')[1]
+
+//         add_integral(sound, int(Integral))
+
+//         add_char(sound, 'dian');
+
+//         for i in range(0, len(Fractional)){
+//             add_num(sound, int(Fractional[i]))
+//         }
+//     }
+//     else{
+//         add_integral(, num);
+//     }
+
+//     add_unit(sound, unit1);
+//     if (NULL != unit2){
+//         add_unit(sound, unit2);
+//     }
+//     return ESP_OK;
 // }
 
 esp_err_t speech_start(float num, char *unit1, char *unit2)

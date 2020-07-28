@@ -85,10 +85,13 @@ static void initialise_mdns(void)
 void app_main()
 {
     ESP_ERROR_CHECK(nvs_flash_init());
-    tcpip_adapter_init();
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    /**< Initialize the BluFi */
+    // ESP_ERROR_CHECK(esp_event_loop_create_default());
+
+    /* Initialize file storage */
+    ESP_ERROR_CHECK(init_spiffs());
+
+    // /**< Initialize the BluFi */
     blufi_network_init();
     bool configured;
     blufi_is_configured(&configured);
@@ -106,9 +109,21 @@ void app_main()
 
     initialise_mdns();
 
-    /* Initialize file storage */
-    ESP_ERROR_CHECK(init_spiffs());
+    speech_init();
 
+    speech_start(1000, "hao", "an", 10 / portTICK_PERIOD_MS);
+
+    speech_start(1200, "hao", "an", 10 / portTICK_PERIOD_MS);
+    speech_start(1020, "hao", "an", 10 / portTICK_PERIOD_MS);
+    speech_start(1002, "hao", "an", 10 / portTICK_PERIOD_MS);
+
+    speech_start(1230, "hao", "fu", 10 / portTICK_PERIOD_MS);
+    speech_start(1203, "hao", "fu", 10 / portTICK_PERIOD_MS);
+    speech_start(1023, "hao", "fu", 10 / portTICK_PERIOD_MS);
+
+    speech_start(74.5, "hao", "fu", 10 / portTICK_PERIOD_MS);
+    speech_start(3.769, "hao", "fu", 10 / portTICK_PERIOD_MS);
+    
     sensor_battery_init(ADC_CHANNEL_6);
 
     /* Start the file server */

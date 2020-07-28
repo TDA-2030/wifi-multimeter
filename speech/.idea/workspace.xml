@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="cfdc27c6-e219-4ad0-8c1b-6cc96ecfcdf6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../code-esp32/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/components/pwm_audio/include/pwm_audio.h" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/components/pwm_audio/include/pwm_audio.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/components/web/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/components/web/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/components/web/component.mk" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/components/web/component.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/components/web/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/components/web/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/components/web/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/components/web/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/main/component.mk" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/main/component.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/main/include/speech.h" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/main/include/speech.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/main/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/main/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/main/speech.c" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/main/speech.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/main/web_server.c" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/main/web_server.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/partitions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/partitions.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../code-esp32/sdkconfig.defaults" beforeDir="false" afterPath="$PROJECT_DIR$/../code-esp32/sdkconfig.defaults" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../restful/mkfatfs" beforeDir="false" afterPath="$PROJECT_DIR$/../restful/mkfatfs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../restful/mklittlefs" beforeDir="false" afterPath="$PROJECT_DIR$/../restful/mklittlefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/0.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/0.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/1.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/1.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/2.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/2.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/3.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/3.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/4.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/4.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/5.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/5.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/6.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/6.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/7.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/7.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/8.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/8.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/9.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/9.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/an.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/an.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/0.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/0.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/1.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/1.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/2.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/2.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/3.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/3.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/4.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/4.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/5.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/5.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/6.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/6.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/7.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/7.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/8.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/8.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/9.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/9.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/an.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/an.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/bai.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/bai.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/dian.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/dian.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/fu.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/fu.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/hao.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/hao.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/ou.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/ou.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/oumu.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/oumu.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/qian.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/qian.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/shi.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/shi.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/wei.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/wei.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/audio_file_acc/zhao.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/audio_file_acc/zhao.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/bai.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/bai.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/dian.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/dian.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/fu.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/fu.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/hao.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/hao.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/ou.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/ou.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/oumu.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/oumu.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/qian.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/qian.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/shi.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/shi.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/wei.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/wei.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/audio_file/zhao.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio_file/zhao.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/0.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/0.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/1.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/1.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/2.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/2.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/3.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/3.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/4.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/4.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/5.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/5.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/6.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/6.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/7.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/7.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/8.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/8.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/9.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/9.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/an.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/an.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/bai.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/bai.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/dian.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/dian.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/fu.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/fu.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/hao.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/hao.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/ou.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/ou.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/oumu.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/oumu.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/qian.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/qian.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/shi.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/shi.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/wei.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/wei.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voice/zhao.wav" beforeDir="false" afterPath="$PROJECT_DIR$/voice/zhao.wav" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1fDdSsgoRdWxTkKEP25tMUGU5LU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="voice_process" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\zhouli\Desktop\multimeter\voice_process\venv\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cfdc27c6-e219-4ad0-8c1b-6cc96ecfcdf6" name="Default Changelist" comment="" />
+      <created>1595756600127</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1595756600127</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595756722323">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1595756722323" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1595756721194">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1595756721194" />
+    <state width="1899" height="266" key="GridCell.Tab.0.bottom" timestamp="1595959848785">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="266" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1595959848785" />
+    <state width="1899" height="266" key="GridCell.Tab.0.center" timestamp="1595959848785">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="266" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1595959848785" />
+    <state width="1899" height="266" key="GridCell.Tab.0.left" timestamp="1595959848784">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="266" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1595959848784" />
+    <state width="1899" height="266" key="GridCell.Tab.0.right" timestamp="1595959848785">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="266" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1595959848785" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1595863542999">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1595863542999" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1595863542999">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1595863542999" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1595863542999">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1595863542999" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1595863542999">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1595863542999" />
+    <state x="447" y="187" key="SettingsEditor" timestamp="1595757018917">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="447" y="187" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1595757018917" />
+  </component>
+</project>

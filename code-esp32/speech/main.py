@@ -114,6 +114,8 @@ def generate_audio(path, acc=1):
 
     for rt, dirs, files in os.walk(path):
         for f in files:
+            if dirs:
+                continue
             print(f)
             file_path = path + f
             fname = os.path.splitext(f)[0]
@@ -126,12 +128,12 @@ def generate_audio(path, acc=1):
                 audio.a_speed(file_path, acc, path_acc+f)
                 file_path = path_acc + f
 
-            cut_audio(file_path, "voice/%s.wav" % fname, 0, 220)
+            cut_audio(file_path, "voice/%s.wav" % fname, 0, 230)
 
 
 if __name__ == "__main__":
     # get_audio_info('../../3.mp3')
-    # generate_audio('audio_file/', acc=1.5)
+    generate_audio('audio_file/', acc=1.6)
 
     # synthesis(1000)
     #

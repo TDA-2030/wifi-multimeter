@@ -1,8 +1,8 @@
-idf_component_register(SRCS "main.c" "web_server.c" "speech.c"
+idf_component_register(SRCS "main.c" "web_server.c" "speech.c" "file_manage.c"
                     INCLUDE_DIRS "include"
                     )
 
-set(AUDIO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../speech")
+set(AUDIO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../speech")
 if(EXISTS ${AUDIO_DIR}/voice)
 
     spiffs_create_partition_image(audio ${AUDIO_DIR}/voice FLASH_IN_PROJECT)

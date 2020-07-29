@@ -23,6 +23,7 @@
 
 #include "pwm_audio.h"
 #include "speech.h"
+#include "file_manage.h"
 
 static const char *TAG = "speech";
 
@@ -32,8 +33,6 @@ static const char *TAG = "speech";
         return (ret_val); \
     }
 
-#define BASE_PATH "/spiffs"
-#define AUDIO_NUM_MAX 16
 
 typedef struct audios_data_t{
     uint8_t *data;
@@ -81,12 +80,6 @@ static audios_data_t *list_push(audios_data_t *list, uint8_t *val, size_t len)
     g_audios_head.len++;  //表头的len字段用来统计表的长度
     return new_elem;
 }
-
-// /* pop an element out of list */
-// static void list_pop(audios_data_t *list, uint8_t *val, size_t len)
-// {
-
-// }
 
 
 static esp_err_t get_audio_data(const char *filepath, uint8_t **out_data, size_t *out_length)
@@ -157,7 +150,9 @@ static esp_err_t add_num(audios_data_t **tail, uint8_t num)
     char path[32];
     uint8_t *data;
     size_t len;
-    sprintf(path, "%s/%d.wav", BASE_PATH, num);
+    fs_info_t *info;
+    fm_get_info(&info);
+    sprintf(path, "%s/%d.wav", info->base_path, num);
     ret = get_audio_data(path, &data, &len);
     SPEECH_CHECK(ESP_OK == ret, "get audio failed", ESP_FAIL);
 
@@ -178,7 +173,9 @@ static esp_err_t add_char(audios_data_t **tail, char *str)
     char path[32];
     uint8_t *data;
     size_t len;
-    sprintf(path, "%s/%s.wav", BASE_PATH, str);
+    fs_info_t *info;
+    fm_get_info(&info);
+    sprintf(path, "%s/%s.wav", info->base_path, str);
     ret = get_audio_data(path, &data, &len);
     SPEECH_CHECK(ESP_OK == ret, "get audio failed", ESP_FAIL);
 
@@ -270,6 +267,8 @@ static esp_err_t add_integral(audios_data_t **tail, char *number)
 
 static esp_err_t synthesis(float num, char *unit1, char *unit2)
 {
+    SPEECH_CHECK(num < 9999.9f, "number too large", ESP_FAIL);
+    
     audios_data_t *audio_list = &g_audios_head;
     char s[16]={0};
 

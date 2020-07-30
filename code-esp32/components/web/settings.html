@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>settings</title>
+    <style type="text/css">
+        /* body {
+            background-color: rgb(14, 13, 13);
+        } */
+        #h2 {
+            text-align:left;
+        }
+        .fixed {
+            text-align:center;
+            font-size: 15px;
+            /* height: 50px; */
+            /* width: 150px; */
+        }
+       
+    </style>
+</head>
+
+<h1 id="h2">Multimeter Configuration</h1>
+
+<br/>
+<form>
+<table class="fixed" border="5">
+    <col width="150px" /><col width="150px" />
+    <tr>
+        <td>
+            <label for="newfile">音量大小</label>
+        </td>
+        <td>
+            <input id="newfile" type="number" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="button">自动关机时间</label>
+        </td>
+        <td>
+            <input id="button" type="number" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" value="提交" onclick="jump()" />
+        </td>
+        
+    </tr>
+   
+</table>
+</form>
+
+<script>
+
+function jump() {
+    alert("configration ok!");
+    window.location.href="index.html";
+
+    // var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+    // httpRequest.open('GET', 'switch_mode', true); //第二步：打开连接
+    // httpRequest.setRequestHeader('measure-mode', mode);
+    // httpRequest.send();//发送请求 将情头体写在send中
+
+    // httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+    // if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+    //         // document.getElementById(id).style.backgroundColor='#0ff';
+    //     document.getElementById('indicator').innerHTML=mode;
+    // }
+    // };
+}
+
+
+</script>

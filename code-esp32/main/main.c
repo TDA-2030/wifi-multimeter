@@ -76,20 +76,10 @@ void app_main()
 
     speech_init();
 
-    speech_start(1000, "hao", "an", 10 / portTICK_PERIOD_MS);
+    speech_play_num(1214, "wei", "an", 10);
+    speech_play_str(10, "%s,%s,%s", "huan", "ying", "shi");
 
-    speech_start(1200, "hao", "an", 10 / portTICK_PERIOD_MS);
-    speech_start(1020, "hao", "an", 10 / portTICK_PERIOD_MS);
-    speech_start(1002, "hao", "an", 10 / portTICK_PERIOD_MS);
-
-    speech_start(1230, "hao", "fu", 10 / portTICK_PERIOD_MS);
-    speech_start(1203, "hao", "fu", 10 / portTICK_PERIOD_MS);
-    speech_start(1023, "hao", "fu", 10 / portTICK_PERIOD_MS);
-
-    speech_start(74.5, "hao", "fu", 10 / portTICK_PERIOD_MS);
-    speech_start(3.769, "hao", "fu", 10 / portTICK_PERIOD_MS);
-    
-    sensor_battery_init(ADC_CHANNEL_6);
+    sensor_battery_init(ADC_CHANNEL_0);
 
     /* Start the file server */
     start_web_server();

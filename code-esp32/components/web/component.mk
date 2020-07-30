@@ -5,3 +5,4 @@
 
 COMPONENT_EMBED_FILES := favicon.ico
 COMPONENT_EMBED_FILES += dashboard.html
+COMPONENT_EMBED_FILES += settings.html

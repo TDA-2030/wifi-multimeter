@@ -10,14 +10,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/param.h>
-// #include <sys/unistd.h>
-// #include <sys/stat.h>
-// #include <dirent.h>
 #include "esp_err.h"
 #include "esp_log.h"
 
 #include "esp_http_server.h"
 #include "sensor.h"
+#include "speech.h"
 
 
 
@@ -84,6 +82,7 @@ static esp_err_t get_adc_handler(httpd_req_t *req)
     sensor_battery_get_info(&vol);
     sprintf(str, "%d MV", vol);
     ESP_LOGI(TAG, "adc=%s", str);
+    speech_play_num(vol, NULL, NULL, 10);
     httpd_resp_set_status(req, HTTPD_200);
     httpd_resp_sendstr(req, str);  // Response body can be empty
     return ESP_OK;
@@ -116,6 +115,9 @@ static esp_err_t download_get_handler(httpd_req_t *req)
         if (buf_len > 1) {
             if (httpd_req_get_hdr_value_str(req, "measure-mode", filepath, buf_len) == ESP_OK) {
                 ESP_LOGI(TAG, "Found header => measure-mode: %s", filepath);
+                if(strstr(filepath, "vol")){
+                    // speech_start()
+                }
             }
         }
         return httpd_resp_sendstr(req, filepath);
@@ -124,17 +126,21 @@ static esp_err_t download_get_handler(httpd_req_t *req)
     /* If name has trailing '/', respond with directory contents */
     else if (filename[strlen(filename) - 1] == '/') {
         /* Get handle to embedded file upload script */
-        extern const unsigned char upload_script_start[] asm("_binary_dashboard_html_start");
-        extern const unsigned char upload_script_end[]   asm("_binary_dashboard_html_end");
+        extern const unsigned char upload_script_start[] asm("_binary_index_html_start");
+        extern const unsigned char upload_script_end[]   asm("_binary_index_html_end");
         const size_t upload_script_size = (upload_script_end - upload_script_start);
 
         /* Add file upload form and script which on execution sends a POST request to /upload */
         return httpd_resp_send(req, (const char *)upload_script_start, upload_script_size);
-    }
-    else if (strcmp(filename, "/index.html") == 0) {
+    }else if (strcmp(filename, "/index.html") == 0) {
         return index_html_get_handler(req);
     } else if (strcmp(filename, "/favicon.ico") == 0) {
         return favicon_get_handler(req);
+    }else if (strcmp(filename, "/settings.html") == 0) {
+        extern const unsigned char script_start[] asm("_binary_settings_html_start");
+        extern const unsigned char script_end[]   asm("_binary_settings_html_end");
+        const size_t script_size = (script_end - script_start);
+        return httpd_resp_send(req, (const char *)script_start, script_size);
     }
 
     httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "unsupport uri");

@@ -49,6 +49,11 @@
     <tr>
         <td><label id="status">ready</label></td>
     </tr>
+    <tr>
+        <td>
+            <button onclick="window.location.href = 'settings.html'">设置</button>
+        </td>
+    </tr>
    
 </table>
 
@@ -94,7 +99,7 @@ function switcw_adc(btn_id) {
     if(!timer_adc){
         document.getElementById(btn_id).innerHTML = "关闭";
         document.getElementById(btn_id).style.backgroundColor='#0ff';
-        timer_adc=self.setInterval('get_adc("'+btn_id+'")',500);
+        timer_adc=self.setInterval('get_adc("'+btn_id+'")',2000);
         document.getElementById('status').innerHTML="ready";
     }else{
         document.getElementById(btn_id).innerHTML = "打开";

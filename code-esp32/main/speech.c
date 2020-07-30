@@ -16,6 +16,7 @@
 #include "freertos/queue.h"
 #include "freertos/event_groups.h"
 
+#include <stdarg.h>
 #include <sys/param.h>
 #include <sys/unistd.h>
 #include <sys/stat.h>
@@ -59,7 +60,13 @@ typedef struct {
     int32_t Subchunk2Size;
 } wav_header_t;
 
+typedef enum {
+    SPEECH_TYPE_NUM,
+    SPEECH_TYPE_STR,
+}speech_type_t;
+
 typedef struct {
+    speech_type_t type;
     float num;
     char *unit1;
     char *unit2;
@@ -165,7 +172,7 @@ static esp_err_t add_num(audios_data_t **tail, uint8_t num)
     return ESP_FAIL;
 }
 
-static esp_err_t add_char(audios_data_t **tail, char *str)
+static esp_err_t add_char(audios_data_t **tail, const char *str)
 {
     esp_err_t ret;
     SPEECH_CHECK(strlen(str) < 10, "string too long", ESP_FAIL);
@@ -265,12 +272,17 @@ static esp_err_t add_integral(audios_data_t **tail, char *number)
     return ESP_OK;
 }
 
-static esp_err_t synthesis(float num, char *unit1, char *unit2)
+static esp_err_t synthesis_num(float num, char *unit1, char *unit2)
 {
-    SPEECH_CHECK(num < 9999.9f, "number too large", ESP_FAIL);
+    SPEECH_CHECK(num < 9999.9f && num > -9999.9f, "number too large", ESP_FAIL);
     
     audios_data_t *audio_list = &g_audios_head;
     char s[16]={0};
+
+    if(num < 0){
+        add_char(&audio_list, "fu");
+        num = -num;
+    }
 
     if (num < 1000){
         sprintf(s, "%f", num);
@@ -304,6 +316,14 @@ static esp_err_t synthesis(float num, char *unit1, char *unit2)
     return ESP_OK;
 }
 
+static esp_err_t synthesis_str(const char *str)
+{
+    SPEECH_CHECK(NULL != str, "string invalid", ESP_FAIL);
+    esp_err_t ret;
+    audios_data_t *audio_list = &g_audios_head;
+    ret = add_char(&audio_list, str);
+    return ret;
+}
 
 static void pwm_audio_task(void *arg)
 {
@@ -311,7 +331,7 @@ static void pwm_audio_task(void *arg)
     size_t cnt;
     size_t block_w;
 
-    pwm_audio_set_volume(-13);
+    pwm_audio_set_volume(-14);
 
     while(1){
         speech_data_t speech_data={0};
@@ -325,7 +345,11 @@ static void pwm_audio_task(void *arg)
             continue;
   		}
         
-        synthesis(speech_data.num, speech_data.unit1, speech_data.unit2);
+        if(SPEECH_TYPE_NUM == speech_data.type){
+            synthesis_num(speech_data.num, speech_data.unit1, speech_data.unit2);
+        }else if (SPEECH_TYPE_STR == speech_data.type){
+            synthesis_str(speech_data.unit1);
+        }
         
         printf("list len=%d, sizeof(audios_data_t)=%d\n", g_audios_head.len, sizeof(audios_data_t));
 
@@ -380,9 +404,10 @@ esp_err_t speech_init(void)
     return ESP_OK;
 }
 
-esp_err_t speech_start(float num, char *unit1, char *unit2, TickType_t xTicksToWait)
+esp_err_t speech_play_num(float num, char *unit1, char *unit2, TickType_t xTicksToWait)
 {
     speech_data_t sd;
+    sd.type = SPEECH_TYPE_NUM;
     sd.num = num;
     sd.unit1 = unit1;
     sd.unit2 = unit2;
@@ -391,6 +416,47 @@ esp_err_t speech_start(float num, char *unit1, char *unit2, TickType_t xTicksToW
         return ESP_FAIL;
     }
     
+    return ESP_OK;
+}
+
+esp_err_t speech_play_str(TickType_t xTicksToWait, const char *format, ...)
+{
+    SPEECH_CHECK(NULL != format, "string invalid", ESP_FAIL);
+    
+    va_list args;
+    va_start(args, format);
+
+    speech_data_t sd;
+    sd.type = SPEECH_TYPE_STR;
+    
+    char p;
+    
+    while (*format){
+
+        p = *format++;
+        if(p != '%'){
+            continue;
+        }
+        p = *format++;
+
+        switch (p) {
+            case 's':{ /* string */
+                char *s = va_arg(args, char *);
+                printf("string [%s]\n", s);
+                sd.unit1 = s;
+                
+            }break;
+            default:
+            printf("unknow param\n");
+            break;
+        }
+    }
+
+    // if(pdTRUE != xQueueSend( g_speech_queue, &sd, xTicksToWait)){
+    //     return ESP_FAIL;
+    // }
+    
+    va_end(args);
     return ESP_OK;
 }
 

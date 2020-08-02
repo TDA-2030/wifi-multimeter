@@ -3,9 +3,9 @@
     <meta charset="utf-8">
     <title>settings</title>
     <style type="text/css">
-        /* body {
-            background-color: rgb(14, 13, 13);
-        } */
+        body {
+            background-color: #333333;
+        }
         #h2 {
             text-align:left;
         }
@@ -27,6 +27,14 @@
     <col width="150px" /><col width="150px" />
     <tr>
         <td>
+            <label for="speech">语音开关</label>
+        </td>
+        <td>
+            <input id="speech" type="checkbox" />
+        </td>
+    </tr>
+    <tr>
+        <td>
             <label for="newfile">音量大小</label>
         </td>
         <td>
@@ -43,8 +51,10 @@
     </tr>
     <tr>
         <td colspan="2">
+            <button onclick="window.location.href = 'index.html'">取消</button>
             <input type="button" value="提交" onclick="jump()" />
         </td>
+       
         
     </tr>
    

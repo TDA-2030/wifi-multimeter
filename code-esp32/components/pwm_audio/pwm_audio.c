@@ -88,6 +88,7 @@ typedef struct {
     int32_t               framerate;                       /*!< frame rates in Hz */
     int32_t               bits_per_sample;                 /*!< bits per sample (8, 16, 32) */
     int32_t               volume;                          /*!< the volume(-VOLUME_0DB ~ VOLUME_0DB) */
+    SemaphoreHandle_t     sem_complete;                    /**< Semaphore for play complete */
 
     pwm_audio_status_t status;
 } pwm_audio_handle;
@@ -375,6 +376,10 @@ static void IRAM_ATTR timer_group_isr(void *para)
         BaseType_t xHigherPriorityTaskWoken;
         xSemaphoreGiveFromISR(rb->semaphore_rb, &xHigherPriorityTaskWoken);
 
+        if (rb_get_count(rb)<=1){
+            xSemaphoreGiveFromISR(handle->sem_complete, &xHigherPriorityTaskWoken);
+        }
+
         if (pdFALSE != xHigherPriorityTaskWoken) {
             portYIELD_FROM_ISR();
         }
@@ -407,6 +412,17 @@ esp_err_t pwm_audio_get_param(int *rate, int *bits, int *ch)
     return ESP_OK;
 }
 
+esp_err_t pwm_audio_wait_complete(TickType_t ticks_to_wait)
+{
+    pwm_audio_handle_t handle = g_pwm_audio_handle;
+
+    if (xSemaphoreTake(handle->sem_complete, ticks_to_wait) == pdTRUE) {
+        return ESP_OK;
+    }
+
+    return ESP_FAIL;
+}
+
 esp_err_t pwm_audio_init(const pwm_audio_config_t *cfg)
 {
     esp_err_t res = ESP_OK;
@@ -423,6 +439,9 @@ esp_err_t pwm_audio_init(const pwm_audio_config_t *cfg)
 
     handle->ringbuf = rb_create(cfg->ringbuf_len);
     PWM_AUDIO_CHECK(handle->ringbuf != NULL, PWM_AUDIO_ALLOC_ERROR, ESP_ERR_NO_MEM);
+
+    handle->sem_complete = xSemaphoreCreateBinary();
+    PWM_AUDIO_CHECK(handle->sem_complete != NULL, PWM_AUDIO_ALLOC_ERROR, ESP_ERR_NO_MEM);
 
     handle->config = *cfg;
     g_pwm_audio_handle = handle;
@@ -763,7 +782,8 @@ esp_err_t pwm_audio_deinit(void)
         }
     }
 
-    free(handle);
+    vSemaphoreDelete(handle->sem_complete);
     rb_destroy(handle->ringbuf);
+    free(handle);
     return ESP_OK;
 }

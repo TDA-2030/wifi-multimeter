@@ -88,6 +88,8 @@ typedef enum {
 esp_err_t pwm_audio_init(const pwm_audio_config_t *cfg);
 
 
+esp_err_t pwm_audio_wait_complete(TickType_t ticks_to_wait);
+
 /**
  * @brief Start audio play
  * 

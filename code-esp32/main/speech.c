@@ -369,8 +369,9 @@ static void pwm_audio_task(void *arg)
                 g_audios_head.len--;
                 
             } else {
-                ESP_LOGW(TAG, "play completed");
                 vTaskDelay(1000 / portTICK_PERIOD_MS);
+                // pwm_audio_wait_complete(portMAX_DELAY);
+                ESP_LOGW(TAG, "play completed");
                 break;
             }
         }

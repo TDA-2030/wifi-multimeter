@@ -17,8 +17,8 @@ static const char *TAG = "i2c bus";
 #define ACK_VAL 0x0                             /*!< I2C ack value */
 #define NACK_VAL 0x1                            /*!< I2C nack value */
 
-int8_t m_sda = 23;
-int8_t m_scl = 22;
+int8_t m_sda = 16;
+int8_t m_scl = 17;
 i2c_port_t m_i2c_num = I2C_NUM_0;
 
 uint16_t slave_Address;
@@ -70,7 +70,7 @@ esp_err_t i2c_master_read_slave(uint8_t *data_rd, size_t size)
     }
     i2c_master_read_byte(cmd, data_rd + size - 1, NACK_VAL);
     i2c_master_stop(cmd);
-    esp_err_t ret = i2c_master_cmd_begin(m_i2c_num, cmd, 1000 / portTICK_RATE_MS);
+    esp_err_t ret = i2c_master_cmd_begin(m_i2c_num, cmd, 100 / portTICK_RATE_MS);
     i2c_cmd_link_delete(cmd);
     return ret;
 }
@@ -93,7 +93,7 @@ esp_err_t i2c_master_write_slave(uint8_t *data_wr, size_t size)
     i2c_master_write_byte(cmd, (slave_Address << 1) | WRITE_BIT, ACK_CHECK_EN);
     i2c_master_write(cmd, data_wr, size, ACK_CHECK_EN);
     i2c_master_stop(cmd);
-    esp_err_t ret = i2c_master_cmd_begin(m_i2c_num, cmd, 1000 / portTICK_RATE_MS);
+    esp_err_t ret = i2c_master_cmd_begin(m_i2c_num, cmd, 100 / portTICK_RATE_MS);
     i2c_cmd_link_delete(cmd);
     return ret;
 }

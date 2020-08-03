@@ -23,12 +23,9 @@
 #include "sensor.h"
 #include "file_manage.h"
 
-#include "ADS1015.h"
+#include "ads1x1x.h"
 #include "INA226.h"
 
-/* This example demonstrates how to create file server
- * using esp_http_server. This file has only startup code.
- * Look in file_server.c for the implementation */
 
 static const char *TAG="multimeter";
 #define HOST_NAME "my-meter"
@@ -83,7 +80,10 @@ void app_main()
     speech_play_str(10, "%s,%s,%s", "huan", "ying", "shi");
 
     sensor_battery_init(ADC_CHANNEL_0);
-    ADS1115_init(ADS1015_ADDRESS);
+
+    ADS1x1x_config_t ads_config;
+    ADS1x1x_init(&ads_config, ADS1115, ADS1x1x_I2C_ADDRESS_ADDR_TO_GND, MUX_SINGLE_1, PGA_4096);
+    ADS1x1x_set_data_rate(&ads_config, DATA_RATE_ADS111x_32);
 
     /* Start the file server */
     start_web_server();
@@ -95,16 +95,15 @@ void app_main()
         // ESP_LOGI("main", "heap free=%f KB", free);
 
         {
-            int16_t adc0, adc1, adc2, adc3;
+            int32_t adc0, adc1, adc2, adc3;
 
-            adc0 = ADS1x15_readADC_SingleEnded(0);
-            adc1 = ADS1x15_readADC_SingleEnded(1);
-            adc2 = ADS1x15_readADC_SingleEnded(2);
-            adc3 = ADS1x15_readADC_SingleEnded(3);
+           ADS1x1x_start_conversion(&ads_config);
+           vTaskDelay(10/portTICK_PERIOD_MS);
+           adc0 = ADS1x1x_read_vol(&ads_config);
             printf("AIN0: %d |", adc0);
-            printf("AIN1: %d |", adc1);
-            printf("AIN2: %d |", adc2);
-            printf("AIN3: %d |", adc3);
+            // printf("AIN1: %d |", adc1);
+            // printf("AIN2: %d |", adc2);
+            // printf("AIN3: %d |", adc3);
             printf("\n");
             
         }

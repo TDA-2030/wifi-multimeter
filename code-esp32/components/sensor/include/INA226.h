@@ -94,57 +94,43 @@ typedef enum
     INA226_MODE_SHUNT_BUS_CONT  = 0b111,
 } ina226_mode_t;
 
-class INA226
-{
-    public:
 
-	bool begin(uint8_t address = INA226_ADDRESS);
-	bool configure(ina226_averages_t avg = INA226_AVERAGES_1, ina226_busConvTime_t busConvTime = INA226_BUS_CONV_TIME_1100US, ina226_shuntConvTime_t shuntConvTime = INA226_SHUNT_CONV_TIME_1100US, ina226_mode_t mode = INA226_MODE_SHUNT_BUS_CONT);
-	bool calibrate(float rShuntValue = 0.1, float iMaxExcepted = 2);
 
-	ina226_averages_t getAverages(void);
-	ina226_busConvTime_t getBusConversionTime(void);
-	ina226_shuntConvTime_t getShuntConversionTime(void);
-	ina226_mode_t getMode(void);
+// bool begin(uint8_t address = INA226_ADDRESS);
+// bool configure(ina226_averages_t avg = INA226_AVERAGES_1, ina226_busConvTime_t busConvTime = INA226_BUS_CONV_TIME_1100US, ina226_shuntConvTime_t shuntConvTime = INA226_SHUNT_CONV_TIME_1100US, ina226_mode_t mode = INA226_MODE_SHUNT_BUS_CONT);
+// bool calibrate(float rShuntValue = 0.1, float iMaxExcepted = 2);
 
-	void enableShuntOverLimitAlert(void);
-	void enableShuntUnderLimitAlert(void);
-	void enableBusOvertLimitAlert(void);
-	void enableBusUnderLimitAlert(void);
-	void enableOverPowerLimitAlert(void);
-	void enableConversionReadyAlert(void);
+ina226_averages_t getAverages(void);
+ina226_busConvTime_t getBusConversionTime(void);
+ina226_shuntConvTime_t getShuntConversionTime(void);
+ina226_mode_t getMode(void);
 
-	void setBusVoltageLimit(float voltage);
-	void setShuntVoltageLimit(float voltage);
-	void setPowerLimit(float watts);
+void enableShuntOverLimitAlert(void);
+void enableShuntUnderLimitAlert(void);
+void enableBusOvertLimitAlert(void);
+void enableBusUnderLimitAlert(void);
+void enableOverPowerLimitAlert(void);
+void enableConversionReadyAlert(void);
 
-	void setAlertInvertedPolarity(bool inverted);
-	void setAlertLatch(bool latch);
+void setBusVoltageLimit(float voltage);
+void setShuntVoltageLimit(float voltage);
+void setPowerLimit(float watts);
 
-	bool isMathOverflow(void);
-	bool isAlert(void);
+void setAlertInvertedPolarity(bool inverted);
+void setAlertLatch(bool latch);
 
-	float readShuntCurrent(void);
-	float readShuntVoltage(void);
-	float readBusPower(void);
-	float readBusVoltage(void);
+bool isMathOverflow(void);
+bool isAlert(void);
 
-	float getMaxPossibleCurrent(void);
-	float getMaxCurrent(void);
-	float getMaxShuntVoltage(void);
-	float getMaxPower(void);
+float readShuntCurrent(void);
+float readShuntVoltage(void);
+float readBusPower(void);
+float readBusVoltage(void);
 
-    private:
+float getMaxPossibleCurrent(void);
+float getMaxCurrent(void);
+float getMaxShuntVoltage(void);
+float getMaxPower(void);
 
-	int8_t inaAddress;
-	float currentLSB, powerLSB;
-	float vShuntMax, vBusMax, rShunt;
-
-	void setMaskEnable(uint16_t mask);
-	uint16_t getMaskEnable(void);
-
-	void writeRegister16(uint8_t reg, uint16_t val);
-	int16_t readRegister16(uint8_t reg);
-};
 
 #endif

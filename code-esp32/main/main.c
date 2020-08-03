@@ -23,17 +23,8 @@
 #include "sensor.h"
 #include "file_manage.h"
 
-#ifdef __cplusplus
-extern "C"{
-#endif /* __cplusplus */
 #include "ADS1015.h"
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-// ADS1115 ads;  /* Use this for the 16-bit version */
-Adafruit_ADS1015 ads;     /* Use thi for the 12-bit version */
-
+#include "INA226.h"
 
 /* This example demonstrates how to create file server
  * using esp_http_server. This file has only startup code.
@@ -92,6 +83,7 @@ void app_main()
     speech_play_str(10, "%s,%s,%s", "huan", "ying", "shi");
 
     sensor_battery_init(ADC_CHANNEL_0);
+    ADS1115_init(ADS1015_ADDRESS);
 
     /* Start the file server */
     start_web_server();
@@ -100,26 +92,25 @@ void app_main()
     {
         size_t _free = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
         float free = (float)_free / 1024.0f;
-        ESP_LOGI("main", "heap free=%f KB", free);
-
+        // ESP_LOGI("main", "heap free=%f KB", free);
 
         {
             int16_t adc0, adc1, adc2, adc3;
 
-            adc0 = ads.readADC_SingleEnded(0);
-            adc1 = ads.readADC_SingleEnded(1);
-            adc2 = ads.readADC_SingleEnded(2);
-            adc3 = ads.readADC_SingleEnded(3);
-            printf("AIN0: %d", adc0);
-            printf("AIN1: %d", adc1);
-            printf("AIN2: %d", adc2);
-            printf("AIN3: %d", adc3);
+            adc0 = ADS1x15_readADC_SingleEnded(0);
+            adc1 = ADS1x15_readADC_SingleEnded(1);
+            adc2 = ADS1x15_readADC_SingleEnded(2);
+            adc3 = ADS1x15_readADC_SingleEnded(3);
+            printf("AIN0: %d |", adc0);
+            printf("AIN1: %d |", adc1);
+            printf("AIN2: %d |", adc2);
+            printf("AIN3: %d |", adc3);
             printf("\n");
             
         }
 
 
-        vTaskDelay(1000/portTICK_PERIOD_MS);
+        vTaskDelay(100/portTICK_PERIOD_MS);
     }
     
 }

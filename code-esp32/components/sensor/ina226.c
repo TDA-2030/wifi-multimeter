@@ -19,7 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "i2c_bus.h"
-#include "INA226.h"
+#include "ina226.h"
+#include <math.h>
 
 
 static int8_t inaAddress;
@@ -49,7 +50,7 @@ static void writeRegister16(uint8_t reg, uint16_t value) {
 static uint16_t readRegister16(uint8_t reg) {
   i2c_set_address(inaAddress);
   uint8_t dat[5];
-  dat[0] = ADS1015_REG_POINTER_CONVERT;
+  dat[0] = reg;
   i2c_master_write_slave(dat, 1);
   i2c_master_read_slave(dat, 2);
 
@@ -69,7 +70,7 @@ static uint16_t getMaskEnable(void)
 
 bool ina226_begin(uint8_t address)
 {
-    Wire.begin();
+    // Wire.begin();
     inaAddress = address;
     return true;
 }

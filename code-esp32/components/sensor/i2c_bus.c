@@ -12,13 +12,11 @@ static const char *TAG = "i2c bus";
 
 #define WRITE_BIT I2C_MASTER_WRITE              /*!< I2C master write */
 #define READ_BIT I2C_MASTER_READ                /*!< I2C master read */
-#define ACK_CHECK_EN 0x1                        /*!< I2C master will check ack from slave*/
-#define ACK_CHECK_DIS 0x0                       /*!< I2C master will not check ack from slave */
-#define ACK_VAL 0x0                             /*!< I2C ack value */
-#define NACK_VAL 0x1                            /*!< I2C nack value */
+#define ACK_CHECK_EN 1                        /*!< I2C master will check ack from slave*/
+#define ACK_CHECK_DIS 0                       /*!< I2C master will not check ack from slave */
 
-int8_t m_sda = 16;
-int8_t m_scl = 17;
+int8_t m_sda = 4;
+int8_t m_scl = 5;
 i2c_port_t m_i2c_num = I2C_NUM_0;
 
 uint16_t slave_Address;
@@ -66,12 +64,15 @@ esp_err_t i2c_master_read_slave(uint8_t *data_rd, size_t size)
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (slave_Address << 1) | READ_BIT, ACK_CHECK_EN);
     if (size > 1) {
-        i2c_master_read(cmd, data_rd, size - 1, ACK_VAL);
+        i2c_master_read(cmd, data_rd, size - 1, I2C_MASTER_ACK);
     }
-    i2c_master_read_byte(cmd, data_rd + size - 1, NACK_VAL);
+    i2c_master_read_byte(cmd, data_rd + size - 1, I2C_MASTER_ACK);
     i2c_master_stop(cmd);
     esp_err_t ret = i2c_master_cmd_begin(m_i2c_num, cmd, 100 / portTICK_RATE_MS);
     i2c_cmd_link_delete(cmd);
+    if(ESP_OK != ret){
+        ESP_LOGW(TAG, "i2c master encounter err %s", esp_err_to_name(ret));
+    }
     return ret;
 }
 
@@ -90,11 +91,14 @@ esp_err_t i2c_master_write_slave(uint8_t *data_wr, size_t size)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (slave_Address << 1) | WRITE_BIT, ACK_CHECK_EN);
+    i2c_master_write_byte(cmd, (slave_Address << 1) | I2C_MASTER_WRITE, ACK_CHECK_EN);
     i2c_master_write(cmd, data_wr, size, ACK_CHECK_EN);
     i2c_master_stop(cmd);
     esp_err_t ret = i2c_master_cmd_begin(m_i2c_num, cmd, 100 / portTICK_RATE_MS);
     i2c_cmd_link_delete(cmd);
+    if(ESP_OK != ret){
+        ESP_LOGW(TAG, "i2c master encounter err %s", esp_err_to_name(ret));
+    }
     return ret;
 }
 

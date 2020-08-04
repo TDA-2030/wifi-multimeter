@@ -171,8 +171,10 @@ ADS1x1x_config_t;
 // Call this at startup:
 uint8_t ADS1x1x_init(ADS1x1x_config_t *p_config, ADS1x1x_chip_t chip, uint8_t i2c_address, ADS1x1x_mux_t input, ADS1x1x_pga_t gain);
 // Then call:
-void ADS1x1x_start_conversion(ADS1x1x_config_t *p_config);
+void ADS1x1x_trigger_conversion(ADS1x1x_config_t *p_config);
 // ... and wait a bit before calling this:
+bool ADS1x1x_isConversionReady(ADS1x1x_config_t *p_config);
+bool ADS1x1x_pollConversion(ADS1x1x_config_t *p_config, uint32_t max_ms);
 int16_t ADS1x1x_read(ADS1x1x_config_t *p_config);
 int32_t ADS1x1x_read_vol(ADS1x1x_config_t *p_config);
 

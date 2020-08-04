@@ -24,7 +24,7 @@
 #include "file_manage.h"
 
 #include "ads1x1x.h"
-#include "INA226.h"
+#include "ina226.h"
 
 
 static const char *TAG="multimeter";
@@ -83,7 +83,7 @@ void app_main()
 
     ADS1x1x_config_t ads_config;
     ADS1x1x_init(&ads_config, ADS1115, ADS1x1x_I2C_ADDRESS_ADDR_TO_GND, MUX_SINGLE_1, PGA_4096);
-    ADS1x1x_set_data_rate(&ads_config, DATA_RATE_ADS111x_32);
+    ADS1x1x_set_data_rate(&ads_config, DATA_RATE_ADS111x_128);
 
     /* Start the file server */
     start_web_server();
@@ -97,13 +97,29 @@ void app_main()
         {
             int32_t adc0, adc1, adc2, adc3;
 
-           ADS1x1x_start_conversion(&ads_config);
-           vTaskDelay(10/portTICK_PERIOD_MS);
-           adc0 = ADS1x1x_read_vol(&ads_config);
-            printf("AIN0: %d |", adc0);
-            // printf("AIN1: %d |", adc1);
-            // printf("AIN2: %d |", adc2);
-            // printf("AIN3: %d |", adc3);
+            ADS1x1x_set_multiplexer(&ads_config, MUX_SINGLE_0);
+            ADS1x1x_trigger_conversion(&ads_config);
+            ADS1x1x_pollConversion(&ads_config, 500);
+            adc0 = ADS1x1x_read_vol(&ads_config);
+
+            ADS1x1x_set_multiplexer(&ads_config, MUX_SINGLE_1);
+            ADS1x1x_trigger_conversion(&ads_config);
+            ADS1x1x_pollConversion(&ads_config, 500);
+            adc1 = ADS1x1x_read_vol(&ads_config);
+
+            ADS1x1x_set_multiplexer(&ads_config, MUX_SINGLE_2);
+            ADS1x1x_trigger_conversion(&ads_config);
+            ADS1x1x_pollConversion(&ads_config, 500);
+            adc2 = ADS1x1x_read_vol(&ads_config);
+
+            ADS1x1x_set_multiplexer(&ads_config, MUX_SINGLE_3);
+            ADS1x1x_trigger_conversion(&ads_config);
+            ADS1x1x_pollConversion(&ads_config, 500);
+            adc3 = ADS1x1x_read_vol(&ads_config);
+            printf("AIN0: %d | ", adc0);
+            printf("AIN1: %d | ", adc1);
+            printf("AIN2: %d | ", adc2);
+            printf("AIN3: %d | ", adc3);
             printf("\n");
             
         }

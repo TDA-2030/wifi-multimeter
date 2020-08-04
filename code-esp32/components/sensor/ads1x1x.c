@@ -102,12 +102,28 @@ uint8_t ADS1x1x_init(ADS1x1x_config_t *p_config, ADS1x1x_chip_t chip, uint8_t i2
             correctly filled ADS1x1x_config_t structure.
 */
 /**************************************************************************/
-void ADS1x1x_start_conversion(ADS1x1x_config_t *p_config)
+void ADS1x1x_trigger_conversion(ADS1x1x_config_t *p_config)
 {
   // Write configuration to the ADC.
+  ADS1x1x_set_os(p_config, OS_SINGLE);
   ADS1x1x_write_register(p_config->i2c_address,ADS1x1x_REG_POINTER_CONFIG,p_config->config);
 }
 
+bool ADS1x1x_isConversionReady(ADS1x1x_config_t *p_config)
+{
+    uint16_t reg = ADS1x1x_read_register(p_config->i2c_address, ADS1x1x_REG_POINTER_CONFIG);
+    return (reg & ADS1x1x_REG_CONFIG_OS_MASK)?1:0;
+}
+
+bool ADS1x1x_pollConversion(ADS1x1x_config_t *p_config, uint32_t max_ms)
+{  
+  max_ms /= 16;
+  for(uint16_t i = 0; i < max_ms; i++) {
+    if (ADS1x1x_isConversionReady(p_config)) return true;
+    delay(16);
+  }
+  return false;
+}
 
 /**************************************************************************/
 /*!

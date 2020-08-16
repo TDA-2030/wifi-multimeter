@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 2
+Sheet 1 4
 Title "Multimeter"
 Date "2020-07-25"
 Rev "V0.1"
@@ -40,7 +40,7 @@ L Connector_Generic:Conn_01x06 J1
 U 1 1 5F1CB114
 P 1100 7150
 F 0 "J1" H 1180 7142 50  0000 L CNN
-F 1 "Conn_01x06" H 1180 7051 50  0000 L CNN
+F 1 "download" H 1180 7051 50  0000 L CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 1100 7150 50  0001 C CNN
 F 3 "~" H 1100 7150 50  0001 C CNN
 	1    1100 7150
@@ -132,11 +132,11 @@ TXD0
 Text Label 1300 6950 0    50   ~ 0
 RXD0
 $Sheet
-S 8350 3100 550  500 
+S 7500 3500 550  500 
 U 5F2186C0
 F0 "power" 50
 F1 "power.sch" 50
-F2 "CHRG" O L 8350 3250 50 
+F2 "CHRG" O L 7500 3650 50 
 $EndSheet
 Text Label 6100 4450 0    50   ~ 0
 ADC_CH6
@@ -249,8 +249,6 @@ NoConn ~ 4800 3650
 NoConn ~ 4800 3750
 NoConn ~ 4800 3850
 NoConn ~ 4800 3950
-NoConn ~ 6000 3950
-NoConn ~ 6000 4050
 NoConn ~ 6000 2650
 NoConn ~ 6000 2750
 NoConn ~ 6000 2850
@@ -266,10 +264,6 @@ NoConn ~ 6000 3750
 NoConn ~ 6000 3850
 Wire Wire Line
 	6000 4150 7200 4150
-Wire Wire Line
-	7200 4150 7200 3250
-Wire Wire Line
-	7200 3250 8350 3250
 NoConn ~ 6000 4250
 NoConn ~ 6000 4350
 NoConn ~ 6000 4450
@@ -317,4 +311,34 @@ Wire Wire Line
 	8200 5150 8200 5000
 Wire Wire Line
 	8200 5000 8400 5000
+$Sheet
+S 8200 1250 1250 850 
+U 5F38F5AD
+F0 "measure" 50
+F1 "measure.sch" 50
+$EndSheet
+$Sheet
+S 7500 2650 850  550 
+U 5F391502
+F0 "speaker" 50
+F1 "speaker.sch" 50
+F2 "SHUTDOWN" I L 7500 2800 50 
+F3 "INPUT" I L 7500 2950 50 
+$EndSheet
+Wire Wire Line
+	7200 4150 7200 3650
+Wire Wire Line
+	7200 3650 7500 3650
+Wire Wire Line
+	7500 2950 7050 2950
+Wire Wire Line
+	7050 2950 7050 4050
+Wire Wire Line
+	7050 4050 6000 4050
+Wire Wire Line
+	7500 2800 6950 2800
+Wire Wire Line
+	6950 2800 6950 3950
+Wire Wire Line
+	6950 3950 6000 3950
 $EndSCHEMATC

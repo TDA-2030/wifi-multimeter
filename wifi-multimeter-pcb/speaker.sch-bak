@@ -1,0 +1,151 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 4 4
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+NoConn ~ 2350 1850
+$Comp
+L Device:C C?
+U 1 1 5F381B14
+P 5100 3900
+F 0 "C?" V 5050 3800 50  0000 C CNN
+F 1 "1uf" V 4939 3900 50  0000 C CNN
+F 2 "" H 5138 3750 50  0001 C CNN
+F 3 "~" H 5100 3900 50  0001 C CNN
+	1    5100 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5F3825B3
+P 5800 4250
+F 0 "R?" V 5700 4250 50  0000 C CNN
+F 1 "20k" V 5900 4250 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 5730 4250 50  0001 C CNN
+F 3 "~" H 5800 4250 50  0001 C CNN
+	1    5800 4250
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5500 3800 5250 3800
+Wire Wire Line
+	5250 3800 5250 3900
+Wire Wire Line
+	5250 3900 5500 3900
+Connection ~ 5250 3900
+$Comp
+L mylib:TC8002D U?
+U 1 1 5F38546E
+P 5750 3850
+F 0 "U?" H 5800 4225 50  0000 C CNN
+F 1 "TC8002D" H 5800 4134 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 5850 3850 50  0001 C CNN
+F 3 "https://item.taobao.com/item.htm?spm=a1z10.3-c-s.w4002-21223910208.9.62286a4bpAfeLo&id=573567338796" H 5750 3850 50  0001 C CNN
+	1    5750 3850
+	1    0    0    -1  
+$EndComp
+Text HLabel 4800 3700 0    50   Input ~ 0
+SHUTDOWN
+Wire Wire Line
+	5500 4000 5400 4000
+Wire Wire Line
+	5400 4000 5400 4250
+$Comp
+L Connector_Generic:Conn_01x02 J?
+U 1 1 5F38725C
+P 6900 3900
+F 0 "J?" H 6980 3892 50  0000 L CNN
+F 1 "Speaker" H 6980 3801 50  0000 L CNN
+F 2 "" H 6900 3900 50  0001 C CNN
+F 3 "~" H 6900 3900 50  0001 C CNN
+	1    6900 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6700 4000 6250 4000
+Wire Wire Line
+	6100 3700 6600 3700
+Wire Wire Line
+	6600 3700 6600 3900
+Wire Wire Line
+	6600 3900 6700 3900
+Wire Wire Line
+	5950 4250 6250 4250
+Wire Wire Line
+	6250 4250 6250 4000
+Connection ~ 6250 4000
+Wire Wire Line
+	6250 4000 6100 4000
+Wire Wire Line
+	5650 4250 5400 4250
+$Comp
+L Device:R R?
+U 1 1 5F388BFA
+P 5250 4250
+F 0 "R?" V 5150 4250 50  0000 C CNN
+F 1 "20k" V 5350 4250 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 5180 4250 50  0001 C CNN
+F 3 "~" H 5250 4250 50  0001 C CNN
+	1    5250 4250
+	0    1    1    0   
+$EndComp
+Connection ~ 5400 4250
+$Comp
+L Device:C C?
+U 1 1 5F389470
+P 4950 4250
+F 0 "C?" V 4900 4350 50  0000 C CNN
+F 1 "0.39uf" V 4789 4250 50  0000 C CNN
+F 2 "" H 4988 4100 50  0001 C CNN
+F 3 "~" H 4950 4250 50  0001 C CNN
+	1    4950 4250
+	0    1    1    0   
+$EndComp
+Text HLabel 4800 4250 0    50   Input ~ 0
+INPUT
+$Comp
+L power:GND #PWR?
+U 1 1 5F38A0EB
+P 6100 3800
+F 0 "#PWR?" H 6100 3550 50  0001 C CNN
+F 1 "GND" V 6105 3672 50  0000 R CNN
+F 2 "" H 6100 3800 50  0001 C CNN
+F 3 "" H 6100 3800 50  0001 C CNN
+	1    6100 3800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5F38A766
+P 4950 3900
+F 0 "#PWR?" H 4950 3650 50  0001 C CNN
+F 1 "GND" V 4955 3772 50  0000 R CNN
+F 2 "" H 4950 3900 50  0001 C CNN
+F 3 "" H 4950 3900 50  0001 C CNN
+	1    4950 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+BATT #PWR?
+U 1 1 5F38AE9B
+P 6100 3900
+F 0 "#PWR?" H 6100 3750 50  0001 C CNN
+F 1 "+BATT" V 6115 4028 50  0000 L CNN
+F 2 "" H 6100 3900 50  0001 C CNN
+F 3 "" H 6100 3900 50  0001 C CNN
+	1    6100 3900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4800 3700 5500 3700
+$EndSCHEMATC

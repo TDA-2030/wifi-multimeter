@@ -17,6 +17,12 @@
 #include "i2c_bus.h"
 #include "ads1x1x.h"
 
+static i2c_bus_t *g_i2c_bus = NULL;
+
+void inline delay(uint32_t ms)
+{
+    vTaskDelay(ms / portTICK_PERIOD_MS);
+}
 
 /**************************************************************************/
 /*!
@@ -25,12 +31,12 @@
 /**************************************************************************/
 void ADS1x1x_write_register(uint8_t i2c_address, uint8_t reg, uint16_t value)
 {
-  i2c_set_address(i2c_address);
+  i2c_set_address(g_i2c_bus, i2c_address);
   uint8_t dat[5];
   dat[0] = reg;
   dat[1] = (value>>8);
   dat[2] = (value & 0xFF);
-  i2c_master_write_slave(dat, 3);
+  i2c_master_write_slave(g_i2c_bus, dat, 3);
 }
 
 /**************************************************************************/
@@ -40,11 +46,11 @@ void ADS1x1x_write_register(uint8_t i2c_address, uint8_t reg, uint16_t value)
 /**************************************************************************/
 uint16_t ADS1x1x_read_register(uint8_t i2c_address, uint8_t reg)
 {
-  i2c_set_address(i2c_address);
+  i2c_set_address(g_i2c_bus, i2c_address);
   uint8_t dat[5];
   dat[0] = reg;
-  i2c_master_write_slave(dat, 1);
-  i2c_master_read_slave(dat, 2);
+  i2c_master_write_slave(g_i2c_bus, dat, 1);
+  i2c_master_read_slave(g_i2c_bus, dat, 2);
 
   return ((dat[0] << 8) | dat[1]); 
 }
@@ -63,7 +69,8 @@ uint8_t ADS1x1x_init(ADS1x1x_config_t *p_config, ADS1x1x_chip_t chip, uint8_t i2
 
   if (p_config!=0)
   {
-    i2c_master_init();
+    i2c_config_t i2c_conf = DEFAULT_I2C_BUS_MASTER(4, 5);
+    g_i2c_bus = i2c_bus_create(I2C_NUM_0, &i2c_conf);
     // Set generic parameters.
     p_config->chip = chip;
     p_config->i2c_address = i2c_address;

@@ -96,41 +96,43 @@ typedef enum
 
 
 
-// bool begin(uint8_t address = INA226_ADDRESS);
-// bool configure(ina226_averages_t avg = INA226_AVERAGES_1, ina226_busConvTime_t busConvTime = INA226_BUS_CONV_TIME_1100US, ina226_shuntConvTime_t shuntConvTime = INA226_SHUNT_CONV_TIME_1100US, ina226_mode_t mode = INA226_MODE_SHUNT_BUS_CONT);
-// bool calibrate(float rShuntValue = 0.1, float iMaxExcepted = 2);
+bool ina226_begin(uint8_t address);
+bool ina226_configure(ina226_averages_t avg, ina226_busConvTime_t busConvTime, ina226_shuntConvTime_t shuntConvTime, ina226_mode_t mode);
+bool ina226_calibrate(float rShuntValue, float iMaxExpected);
 
-ina226_averages_t getAverages(void);
-ina226_busConvTime_t getBusConversionTime(void);
-ina226_shuntConvTime_t getShuntConversionTime(void);
-ina226_mode_t getMode(void);
+float ina226_readShuntCurrent(void);
+float ina226_readShuntVoltage(void);
+float ina226_readBusPower(void);
+float ina226_readBusVoltage(void);
 
-void enableShuntOverLimitAlert(void);
-void enableShuntUnderLimitAlert(void);
-void enableBusOvertLimitAlert(void);
-void enableBusUnderLimitAlert(void);
-void enableOverPowerLimitAlert(void);
-void enableConversionReadyAlert(void);
+float ina226_getMaxPossibleCurrent(void);
+float ina226_getMaxCurrent(void);
+float ina226_getMaxShuntVoltage(void);
+float ina226_getMaxPower(void);
 
-void setBusVoltageLimit(float voltage);
-void setShuntVoltageLimit(float voltage);
-void setPowerLimit(float watts);
+ina226_averages_t ina226_getAverages(void);
+ina226_busConvTime_t ina226_getBusConversionTime(void);
+ina226_shuntConvTime_t ina226_getShuntConversionTime(void);
+ina226_mode_t ina226_getMode(void);
 
-void setAlertInvertedPolarity(bool inverted);
-void setAlertLatch(bool latch);
+void ina226_enableShuntOverLimitAlert(void);
+void ina226_enableShuntUnderLimitAlert(void);
+void ina226_enableBusOvertLimitAlert(void);
+void ina226_enableBusUnderLimitAlert(void);
+void ina226_enableOverPowerLimitAlert(void);
+void ina226_enableConversionReadyAlert(void);
 
-bool isMathOverflow(void);
-bool isAlert(void);
+void ina226_setBusVoltageLimit(float voltage);
+void ina226_setShuntVoltageLimit(float voltage);
+void ina226_setPowerLimit(float watts);
 
-float readShuntCurrent(void);
-float readShuntVoltage(void);
-float readBusPower(void);
-float readBusVoltage(void);
+void ina226_setAlertInvertedPolarity(bool inverted);
+void ina226_setAlertLatch(bool latch);
 
-float getMaxPossibleCurrent(void);
-float getMaxCurrent(void);
-float getMaxShuntVoltage(void);
-float getMaxPower(void);
+bool ina226_isMathOverflow(void);
+bool ina226_isAlert(void);
+
+
 
 
 #endif

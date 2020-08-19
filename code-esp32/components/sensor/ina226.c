@@ -23,9 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 
-static int8_t inaAddress;
 static float currentLSB, powerLSB;
 static float vShuntMax, vBusMax, rShunt;
+static i2c_bus_t *g_i2c_bus = NULL;
 
 
 /**************************************************************************/
@@ -34,12 +34,12 @@ static float vShuntMax, vBusMax, rShunt;
 */
 /**************************************************************************/
 static void writeRegister16(uint8_t reg, uint16_t value) {
-  i2c_set_address(inaAddress);
+//   i2c_set_address(g_i2c_bus, inaAddress);
   uint8_t dat[5];
   dat[0] = reg;
   dat[1] = (value>>8);
   dat[2] = (value & 0xFF);
-  i2c_master_write_slave(dat, 3);
+  i2c_master_write_slave(g_i2c_bus, dat, 3);
 }
 
 /**************************************************************************/
@@ -48,11 +48,11 @@ static void writeRegister16(uint8_t reg, uint16_t value) {
 */
 /**************************************************************************/
 static uint16_t readRegister16(uint8_t reg) {
-  i2c_set_address(inaAddress);
+//   i2c_set_address(g_i2c_bus, inaAddress);
   uint8_t dat[5];
   dat[0] = reg;
-  i2c_master_write_slave(dat, 1);
-  i2c_master_read_slave(dat, 2);
+  i2c_master_write_slave(g_i2c_bus, dat, 1);
+  i2c_master_read_slave(g_i2c_bus, dat, 2);
 
   return ((dat[0] << 8) | dat[1]);  
 }
@@ -70,8 +70,10 @@ static uint16_t getMaskEnable(void)
 
 bool ina226_begin(uint8_t address)
 {
-    // Wire.begin();
-    inaAddress = address;
+    i2c_config_t i2c_conf = DEFAULT_I2C_BUS_MASTER(16, 17);
+    g_i2c_bus = i2c_bus_create(I2C_NUM_1, &i2c_conf);
+    i2c_set_address(g_i2c_bus, address);
+
     return true;
 }
 
@@ -123,7 +125,7 @@ float ina226_getMaxPossibleCurrent(void)
 float ina226_getMaxCurrent(void)
 {
     float maxCurrent = (currentLSB * 32767);
-    float maxPossible = getMaxPossibleCurrent();
+    float maxPossible = ina226_getMaxPossibleCurrent();
 
     if (maxCurrent > maxPossible)
     {
@@ -136,7 +138,7 @@ float ina226_getMaxCurrent(void)
 
 float ina226_getMaxShuntVoltage(void)
 {
-    float maxVoltage = getMaxCurrent() * rShunt;
+    float maxVoltage = ina226_getMaxCurrent() * rShunt;
 
     if (maxVoltage >= vShuntMax)
     {
@@ -149,7 +151,7 @@ float ina226_getMaxShuntVoltage(void)
 
 float ina226_getMaxPower(void)
 {
-    return (getMaxCurrent() * vBusMax);
+    return (ina226_getMaxCurrent() * vBusMax);
 }
 
 float ina226_readBusPower(void)

@@ -65,11 +65,12 @@ typedef enum {
     SPEECH_TYPE_STR,
 }speech_type_t;
 
+#define SPEECH_STRING_MAX_LENGTH 32
 typedef struct {
     speech_type_t type;
     float num;
-    char *unit1;
-    char *unit2;
+    char unit1[SPEECH_STRING_MAX_LENGTH];  /**< storage unit string or speech string */
+    char unit2[4];   /**< storage unit string only */
 } speech_data_t;
 
 static audios_data_t g_audios_head = {0};
@@ -99,7 +100,7 @@ static esp_err_t get_audio_data(const char *filepath, uint8_t **out_data, size_t
         return ESP_FAIL;
     }
 
-    ESP_LOGI(TAG, "file stat info: %s (%ld bytes)...", filepath, file_stat.st_size);
+    ESP_LOGD(TAG, "file stat info: %s (%ld bytes)...", filepath, file_stat.st_size);
     *out_length = file_stat.st_size;
     fd = fopen(filepath, "r");
 
@@ -122,7 +123,7 @@ static esp_err_t get_audio_data(const char *filepath, uint8_t **out_data, size_t
      */
     wav_header_t wav_head;
     int chunksize = fread(&wav_head, 1, sizeof(wav_header_t), fd);
-    ESP_LOGI(TAG, "frame_rate=%d, ch=%d, width=%d", wav_head.SampleRate, wav_head.NumChannels, wav_head.BitsPerSample);
+    ESP_LOGD(TAG, "frame_rate=%d, ch=%d, width=%d", wav_head.SampleRate, wav_head.NumChannels, wav_head.BitsPerSample);
 
     /**
      * read wave data of WAV file
@@ -321,7 +322,19 @@ static esp_err_t synthesis_str(const char *str)
     SPEECH_CHECK(NULL != str, "string invalid", ESP_FAIL);
     esp_err_t ret;
     audios_data_t *audio_list = &g_audios_head;
-    ret = add_char(&audio_list, str);
+    char *p_s, *p_e;
+    p_s = (char*)str;
+    while(1){
+        p_e = strchr(p_s, '_');
+        if(p_e){
+            *p_e = '\0';
+            ESP_LOGI(TAG, "play string: %s", p_s);
+            add_char(&audio_list, p_s);
+            p_s = p_e+1;
+        }else{
+            break;
+        }
+    }
     return ret;
 }
 
@@ -351,7 +364,7 @@ static void pwm_audio_task(void *arg)
             synthesis_str(speech_data.unit1);
         }
         
-        printf("list len=%d, sizeof(audios_data_t)=%d\n", g_audios_head.len, sizeof(audios_data_t));
+        ESP_LOGD(TAG, "list len=%d, sizeof(audios_data_t)=%d\n", g_audios_head.len, sizeof(audios_data_t));
 
         audios_data_t *list=NULL;
         audios_data_t *nt = g_audios_head.next;
@@ -362,7 +375,7 @@ static void pwm_audio_task(void *arg)
                 wave_array = list->data;
                 block_w = list->len;
                 pwm_audio_write(wave_array, block_w, &cnt, 20000 / portTICK_PERIOD_MS);
-                ESP_LOGI(TAG, "write [%d] [%d]", block_w, cnt);
+                ESP_LOGD(TAG, "write [%d] [%d]", block_w, cnt);
                 nt = list->next;
                 free(list->data);
                 free(list);
@@ -407,57 +420,34 @@ esp_err_t speech_init(void)
 
 esp_err_t speech_play_num(float num, char *unit1, char *unit2, TickType_t xTicksToWait)
 {
-    speech_data_t sd;
+    speech_data_t sd={0};
     sd.type = SPEECH_TYPE_NUM;
     sd.num = num;
-    sd.unit1 = unit1;
-    sd.unit2 = unit2;
+    strncpy(sd.unit1, unit1, 4);
+    strncpy(sd.unit2, unit2, 4);
     
     if(pdTRUE != xQueueSend( g_speech_queue, &sd, xTicksToWait)){
+        ESP_LOGE(TAG, "send speech data failed");
         return ESP_FAIL;
     }
     
     return ESP_OK;
 }
 
-esp_err_t speech_play_str(TickType_t xTicksToWait, const char *format, ...)
+esp_err_t speech_play_str(TickType_t xTicksToWait, const char *str)
 {
-    SPEECH_CHECK(NULL != format, "string invalid", ESP_FAIL);
-    
-    va_list args;
-    va_start(args, format);
+    SPEECH_CHECK(NULL != str, "string invalid", ESP_FAIL);
 
-    speech_data_t sd;
+    speech_data_t sd={0};
     sd.type = SPEECH_TYPE_STR;
-    
-    char p;
-    
-    while (*format){
+    ESP_LOGI(TAG, "play string [%s]\n", str);
+    strncpy(sd.unit1, str, SPEECH_STRING_MAX_LENGTH-1);
 
-        p = *format++;
-        if(p != '%'){
-            continue;
-        }
-        p = *format++;
-
-        switch (p) {
-            case 's':{ /* string */
-                char *s = va_arg(args, char *);
-                printf("string [%s]\n", s);
-                sd.unit1 = s;
-                
-            }break;
-            default:
-            printf("unknow param\n");
-            break;
-        }
+    if(pdTRUE != xQueueSend( g_speech_queue, &sd, xTicksToWait)){
+        ESP_LOGE(TAG, "send speech data failed");
+        return ESP_FAIL;
     }
 
-    // if(pdTRUE != xQueueSend( g_speech_queue, &sd, xTicksToWait)){
-    //     return ESP_FAIL;
-    // }
-    
-    va_end(args);
     return ESP_OK;
 }
 

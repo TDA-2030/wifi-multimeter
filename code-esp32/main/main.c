@@ -142,7 +142,7 @@ void app_main()
     speech_init();
 
     speech_play_num(1214, "wei", "an", 10);
-    speech_play_str(10, "%s,%s,%s", "huan", "ying", "shi");
+    speech_play_str(10, "huan_ying_shi_yong_");
 
     sensor_battery_init(ADC_CHANNEL_0);
 
@@ -201,7 +201,7 @@ void app_main()
         printf("Shunt voltage: %f V\n", ina226_readShuntVoltage());
         printf("Shunt current: %f A\n", ina226_readShuntCurrent());
 
-        vTaskDelay(100/portTICK_PERIOD_MS);
+        vTaskDelay(500/portTICK_PERIOD_MS);
     }
     
 }

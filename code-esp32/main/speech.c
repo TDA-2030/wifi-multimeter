@@ -146,7 +146,7 @@ static esp_err_t get_audio_data(const char *filepath, uint8_t **out_data, size_t
         ESP_LOGE(TAG, "file read incorrect");
     }
 
-    ESP_LOGI(TAG, "File reading complete, total: %d bytes", write_num);
+    ESP_LOGD(TAG, "File reading complete, total: %d bytes", write_num);
     return ESP_OK;
 }
 
@@ -294,7 +294,7 @@ static esp_err_t synthesis_num(float num, char *unit1, char *unit2)
         *dot = '\0';
         char *fractional = dot+1;
         uint8_t len_fractional = strlen(fractional);
-        printf("num spit [%s.%s]\n", integral, fractional);
+        ESP_LOGD(TAG, "number split to [%s.%s]\n", integral, fractional);
 
         add_integral(&audio_list, integral);
         add_char(&audio_list, "dian");
@@ -308,10 +308,10 @@ static esp_err_t synthesis_num(float num, char *unit1, char *unit2)
         add_integral(&audio_list, s);
     }
 
-    if (NULL != unit1){
+    if ('\0' != *unit1){
         add_unit(&audio_list, unit1);
     }
-    if (NULL != unit2){
+    if ('\0' != *unit2){
         add_unit(&audio_list, unit2);
     }
     return ESP_OK;
@@ -324,16 +324,18 @@ static esp_err_t synthesis_str(const char *str)
     audios_data_t *audio_list = &g_audios_head;
     char *p_s, *p_e;
     p_s = (char*)str;
+    p_e = p_s;
     while(1){
-        p_e = strchr(p_s, '_');
-        if(p_e){
+        
+        if(*p_e == ' '){ /**< find a space */
             *p_e = '\0';
-            ESP_LOGI(TAG, "play string: %s", p_s);
             add_char(&audio_list, p_s);
-            p_s = p_e+1;
-        }else{
+            p_s = p_e + 1;
+        }else if(*p_e == '\0'){ /**< end by terminator */
+            add_char(&audio_list, p_s);
             break;
         }
+        p_e++;
     }
     return ret;
 }
@@ -382,9 +384,9 @@ static void pwm_audio_task(void *arg)
                 g_audios_head.len--;
                 
             } else {
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                vTaskDelay(600 / portTICK_PERIOD_MS);
                 // pwm_audio_wait_complete(portMAX_DELAY);
-                ESP_LOGW(TAG, "play completed");
+                ESP_LOGD(TAG, "play completed");
                 break;
             }
         }
@@ -423,8 +425,14 @@ esp_err_t speech_play_num(float num, char *unit1, char *unit2, TickType_t xTicks
     speech_data_t sd={0};
     sd.type = SPEECH_TYPE_NUM;
     sd.num = num;
-    strncpy(sd.unit1, unit1, 4);
-    strncpy(sd.unit2, unit2, 4);
+    if (NULL != unit1){
+        strncpy(sd.unit1, unit1, 4);
+        sd.unit1[3] = '\0';
+    }
+    if (NULL != unit2){
+        strncpy(sd.unit2, unit2, 4);
+        sd.unit2[3] = '\0';
+    }
     
     if(pdTRUE != xQueueSend( g_speech_queue, &sd, xTicksToWait)){
         ESP_LOGE(TAG, "send speech data failed");
@@ -434,14 +442,15 @@ esp_err_t speech_play_num(float num, char *unit1, char *unit2, TickType_t xTicks
     return ESP_OK;
 }
 
-esp_err_t speech_play_str(TickType_t xTicksToWait, const char *str)
+esp_err_t speech_play_str(const char *str, TickType_t xTicksToWait)
 {
     SPEECH_CHECK(NULL != str, "string invalid", ESP_FAIL);
+    SPEECH_CHECK(SPEECH_STRING_MAX_LENGTH-1 > strlen(str), "string too long", ESP_FAIL)
 
     speech_data_t sd={0};
     sd.type = SPEECH_TYPE_STR;
     ESP_LOGI(TAG, "play string [%s]\n", str);
-    strncpy(sd.unit1, str, SPEECH_STRING_MAX_LENGTH-1);
+    strcpy(sd.unit1, str);
 
     if(pdTRUE != xQueueSend( g_speech_queue, &sd, xTicksToWait)){
         ESP_LOGE(TAG, "send speech data failed");
@@ -451,3 +460,7 @@ esp_err_t speech_play_str(TickType_t xTicksToWait, const char *str)
     return ESP_OK;
 }
 
+esp_err_t speech_set_volume(int8_t val)
+{
+    return pwm_audio_set_volume(val);
+}

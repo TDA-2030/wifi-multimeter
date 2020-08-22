@@ -142,7 +142,8 @@ void app_main()
     speech_init();
 
     speech_play_num(1214, "wei", "an", 10);
-    speech_play_str(10, "huan_ying_shi_yong_");
+    speech_play_str("huan ying shi yong", 10);
+    speech_set_volume(-8);
 
     sensor_battery_init(ADC_CHANNEL_0);
 
@@ -193,15 +194,20 @@ void app_main()
             printf("AIN2: %d | ", adc2);
             printf("AIN3: %d | ", adc3);
             printf("\n");
+            speech_play_num((float)adc0/10000.0f, "fu", NULL, 10);
             
         }
-
-        printf("Bus voltage:   %f V\n", ina226_readBusVoltage());
+        float vol, curr;
+        vol = ina226_readBusVoltage();
+        curr = ina226_readShuntCurrent();
+        printf("Bus voltage:   %f V\n", vol);
         printf("Bus power:     %f W\n", ina226_readBusPower());
         printf("Shunt voltage: %f V\n", ina226_readShuntVoltage());
-        printf("Shunt current: %f A\n", ina226_readShuntCurrent());
+        printf("Shunt current: %f A\n", curr);
 
-        vTaskDelay(500/portTICK_PERIOD_MS);
+        speech_play_num(curr, "an", NULL, 10);
+
+        vTaskDelay(6000/portTICK_PERIOD_MS);
     }
     
 }

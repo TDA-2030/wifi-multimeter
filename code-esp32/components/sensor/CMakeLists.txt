@@ -1,4 +1,4 @@
-set(component_srcs "sensor.c" "ads1x1x.c" "ina226.c" "i2c_bus.c")
+set(component_srcs "measure.c" "ads1x1x.c" "ina226.c" "i2c_bus.c")
 
 idf_component_register(SRCS "${component_srcs}"
                        INCLUDE_DIRS "include"

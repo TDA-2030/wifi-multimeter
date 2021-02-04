@@ -14,7 +14,8 @@
 #include "esp_log.h"
 
 #include "esp_http_server.h"
-#include "sensor.h"
+#include "measure.h"
+#include "ina226.h"
 #include "speech.h"
 
 
@@ -78,11 +79,9 @@ static const char* get_path_from_uri(char *dest, const char *base_path, const ch
 static esp_err_t get_adc_handler(httpd_req_t *req)
 {
     char str[32]={0};
-    int32_t vol;
-    sensor_battery_get_info(&vol);
-    sprintf(str, "%d MV", vol);
-    ESP_LOGI(TAG, "adc=%s", str);
-    speech_play_num(vol, NULL, NULL, 10);
+    // float vol = ina226_readBusVoltage();
+    float curr = ina226_readShuntVoltage()*10.0f;
+    sprintf(str, "%.4f", curr*0.9262f);
     httpd_resp_set_status(req, HTTPD_200);
     httpd_resp_sendstr(req, str);  // Response body can be empty
     return ESP_OK;
@@ -136,7 +135,12 @@ static esp_err_t download_get_handler(httpd_req_t *req)
         return index_html_get_handler(req);
     } else if (strcmp(filename, "/favicon.ico") == 0) {
         return favicon_get_handler(req);
-    }else if (strcmp(filename, "/settings.html") == 0) {
+    } else if (strcmp(filename, "/index.js") == 0) {
+        extern const unsigned char js_start[] asm("_binary_index_js_start");
+        extern const unsigned char js_end[]   asm("_binary_index_js_end");
+        const size_t js_size = (js_end - js_start);
+        return httpd_resp_send(req, (const char *)js_start, js_size);
+    } else if (strcmp(filename, "/settings.html") == 0) {
         extern const unsigned char script_start[] asm("_binary_settings_html_start");
         extern const unsigned char script_end[]   asm("_binary_settings_html_end");
         const size_t script_size = (script_end - script_start);

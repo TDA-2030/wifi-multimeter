@@ -9,7 +9,7 @@ if(EXISTS ${AUDIO_DIR}/voice)
                     RESULT_VARIABLE AUDIO_IS_UPDATED
                     )
     if(AUDIO_IS_UPDATED EQUAL 27)
-        spiffs_create_partition_image(audio ${AUDIO_DIR}/voice FLASH_IN_PROJECT)
+        #spiffs_create_partition_image(audio ${AUDIO_DIR}/voice FLASH_IN_PROJECT)
     endif()
 else()
     message(FATAL_ERROR "${AUDIO_DIR}/dist doesn't exit. ")

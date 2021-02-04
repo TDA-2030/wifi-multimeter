@@ -70,7 +70,7 @@ static uint16_t getMaskEnable(void)
 
 bool ina226_begin(uint8_t address)
 {
-    i2c_config_t i2c_conf = DEFAULT_I2C_BUS_MASTER(16, 17);
+    i2c_config_t i2c_conf = DEFAULT_I2C_BUS_MASTER(18, 19);
     g_i2c_bus = i2c_bus_create(I2C_NUM_1, &i2c_conf);
     i2c_set_address(g_i2c_bus, address);
 
@@ -170,7 +170,7 @@ float ina226_readShuntVoltage(void)
 
     voltage = readRegister16(INA226_REG_SHUNTVOLTAGE);
 
-    return (voltage * 0.0000025);
+    return (voltage * 0.0025);
 }
 
 float ina226_readBusVoltage(void)

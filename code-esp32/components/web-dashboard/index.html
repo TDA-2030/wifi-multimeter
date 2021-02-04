@@ -46,7 +46,7 @@
 
         #ADCdata {
             font-family: Graduate;
-            font-size: 120px;
+            font-size: 80px;
         }
 
         #indicator {
@@ -66,150 +66,40 @@
     </style>
 </head>
 
-<div>
-    <h1 id="title">ESP32 WiFi Multimeter</h1>
-</div>
+<body>
+    <div>
+        <h1 id="title">ESP32 WiFi Multimeter</h1>
+    </div>
 
 
-<div class="display">
-    <label id="ADCdata">----</label>
-    <label id="indicator">电压</label>
-</div>
+    <div class="display">
+        <label id="ADCdata">----</label>
+        <label id="indicator">电流</label>
+
+    </div>
+
+    <canvas id="myCanvas" width="800" height="400" style="border:1px solid #d3d3d3; ">Your browser does not support the HTML5 canvas tag.</canvas>
 
 
-<table class="btn_table" border="0">
-    <tr>
-        <col width="150px" />
-        <col width="150px" />
-        <col width="150px" />
-        <col width="150px" />
-        <td><button class="button" id="switchADC" onclick="switcw_adc('switchADC')">打开</button></td>
-        <td><button class="button" id="btn_omu" onclick="switch_mode('btn_omu', 'omu')">Ω</button></td>
-        <td><button class="button" id="btn_vol" onclick="switch_mode('btn_vol', 'vol')">V</button></td>
-        <td><button class="button" id="btn_cur" onclick="switch_mode('btn_cur', 'cur')">A</button></td>
-    </tr>
+    <table class="btn_table" border="0">
+        <tr>
+            <col width="150px" />
+            <col width="150px" />
+            <col width="150px" />
+            <col width="150px" />
+            <td><button class="button" id="switchADC" onclick="switcw_adc('switchADC')">打开</button></td>
+            <td><button class="button" id="btn_omu" onclick="switch_mode('btn_omu', 'omu')">Ω</button></td>
+            <td><button class="button" id="btn_vol" onclick="switch_mode('btn_vol', 'vol')">V</button></td>
+            <td><button class="button" id="btn_cur" onclick="switch_mode('btn_cur', 'cur')">A</button></td>
+        </tr>
 
-    <tr height="100px">
-        <td><button class="button" onclick="window.location.href = 'settings.html'">设置</button></td>
-        <td colspan="3"><label id="status">ready</label></td>
-    </tr>
+        <tr height="100px">
+            <td><button class="button" onclick="window.location.href = 'settings.html'">设置</button></td>
+            <td colspan="3"><label id="status">ready</label></td>
+        </tr>
 
-</table>
+    </table>
 
-<script>
-
-    var button_op = {
-        class_name: "button",
-        switch_id: "switchADC",
-        bg_color: "",
-        color: "",
-        old_bg_color: "",
-        old_color: "",
-        init: function () {
-            this.color = "white";
-            this.bg_color = "#4CAF50";
-        },
-        my_hover: function () {
-            //获取所有的li标签
-            var list = document.getElementsByClassName(this.class_name);
-            for (var i = 0; i < list.length; i++) {
-                //注册鼠标进入事件
-                list[i].onmouseover = function () {
-                    button_op.old_bg_color = this.style.backgroundColor;
-                    button_op.old_color = this.style.Color;
-                    this.style.cssText = `background-color: ${button_op.color};color: ${button_op.bg_color};border: 2px solid;`;
-                    console.log(this.style.cssText);
-                };
-                //注册鼠标离开事件
-                list[i].onmouseout = function () {
-                    //恢复到这个标签默认的颜色
-                    this.style.cssText = `background-color: ${button_op.old_bg_color};color: ${button_op.old_color};`;
-                    console.log(this.style.cssText);
-                };
-            }
-        },
-        change_status: function (status) {
-
-            var btn = document.getElementById(this.switch_id);
-            if (status == 0) {
-                btn.innerHTML = "打开";
-                this.bg_color = "#4CAF50";
-                btn.style.backgroundColor = "#4CAF50";
-            } else {
-                btn.innerHTML = "关闭";
-                this.bg_color = "red";
-                btn.style.backgroundColor = "red";
-            }
-
-        }
-    }
-
-    window.onload = function () {
-        button_op.init();
-        button_op.my_hover();
-    }
-    var timer_adc = 0;
-    var no_resp_num = 0;
-
-
-    function get_adc(btn_id) {
-        var httpRequest = new XMLHttpRequest();
-
-        httpRequest.open('GET', 'getadc', true);
-        httpRequest.timeout = 600; // 超时时间，单位是毫秒
-
-        httpRequest.onreadystatechange = function () {
-            if (httpRequest.readyState == 4) {
-                if (httpRequest.status == 200) {
-                    var data = httpRequest.responseText;
-                    document.getElementById('ADCdata').innerHTML = data;
-                    no_resp_num = 0;
-                } else if (httpRequest.status == 0) {
-                    no_resp_num++;
-                    console.log("no_resp_num=" + no_resp_num);
-                    if (no_resp_num > 5) {
-                        button_op.change_status(0);
-                        timer_adc = window.clearInterval(timer_adc);
-                        document.getElementById('status').innerHTML = "connect error";
-                    }
-
-                } else {
-                    document.getElementById('status').innerHTML = httpRequest.status + " Error!\n" + httpRequest.responseText;
-
-                }
-            }
-        };
-
-        httpRequest.send();
-    }
-
-
-    function switcw_adc(btn_id) {
-        if (!timer_adc) {
-            button_op.change_status(1);
-            timer_adc = self.setInterval('get_adc("' + btn_id + '")', 2800);
-            // document.getElementById('status').innerHTML = "ready";
-        } else {
-            button_op.change_status(0);
-            timer_adc = window.clearInterval(timer_adc);
-        }
-    }
-
-
-    function switch_mode(id, mode) {
-
-        var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
-        httpRequest.open('GET', 'switch_mode', true); //第二步：打开连接
-        httpRequest.setRequestHeader('measure-mode', mode);
-        httpRequest.send();//发送请求 将情头体写在send中
-
-        httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
-            if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
-                // document.getElementById(id).style.backgroundColor='#0ff';
-                document.getElementById('indicator').innerHTML = mode;
-            }
-        };
-    }
-
-
-</script>
+    <script src="index.js"></script>
+ 
+</body>
